@@ -10,7 +10,7 @@ data class Account(
     @Column(name = "type")
     var type: Long,
     @Column(name = "number")
-    var number: Long,
+    var accountNumber: Long,
     @Column(name = "balance")
     var balance: Double,
 )
