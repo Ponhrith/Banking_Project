@@ -13,9 +13,9 @@ data class Transaction(
     @Column(name = "amount")
     var amount: Double,
     @Column(name = "target_account_id")
-    val target_account_id: Long,
+    val targetAccountId: Long,
     @Column(name ="source_account_id")
-    val source_account_id: Long,
+    val sourceAccountId: Long,
 ){
     @ManyToOne
     @JoinColumn(name = "profile_id")
