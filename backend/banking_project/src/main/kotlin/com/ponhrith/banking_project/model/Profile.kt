@@ -15,7 +15,10 @@ data class Profile(
     @Column(name = "address")
     var address: String,
     @Column(name ="email")
-    var email: String
+    var email: String,
+    @Column(name ="password")
+    var password: String,
+
 ){
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
