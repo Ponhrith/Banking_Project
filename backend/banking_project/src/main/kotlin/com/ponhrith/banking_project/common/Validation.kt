@@ -20,8 +20,6 @@ fun String.isValidEmail(): Boolean {
     return true
 }
 
-
-
 fun String.isValidFullName(): Boolean {
     if (this.isEmpty())
         throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name cannot be empty")
@@ -31,6 +29,19 @@ fun String.isValidFullName(): Boolean {
     if (!this.matches(regex) || containsNumbersOrSpecialChars) {
         throw ResponseStatusException(HttpStatus.BAD_REQUEST,
             "Invalid full name, must contain at least one space and consist of alphabetical characters only")
+    }
+    return true
+}
+
+fun String.isValidPassword(): Boolean {
+    if (this.isEmpty())
+        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Password cannot be empty")
+
+    val regex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@$!%*?&]{8,}\$")
+    if (!this.matches(regex)) {
+        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid password. " +
+                "It must be at least 8 characters long, contain at least one uppercase letter, " +
+                "one lowercase letter, one number, and one special character.")
     }
     return true
 }

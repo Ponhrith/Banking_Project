@@ -1,5 +1,8 @@
 package com.ponhrith.banking_project.service
 
+import com.ponhrith.banking_project.common.isValidEmail
+import com.ponhrith.banking_project.common.isValidFullName
+import com.ponhrith.banking_project.common.isValidPassword
 import com.ponhrith.banking_project.controller.request.RegisterReq
 import com.ponhrith.banking_project.controller.response.RegisterRes
 import com.ponhrith.banking_project.repository.AccountRepository
@@ -50,6 +53,12 @@ class ProfileService(
             password = generatedPassword,
             email = savedUser.email
         )
+    }
+
+    private fun validateRegisterRequest(registerReq: RegisterReq) {
+        registerReq.fullname.isValidFullName()
+        registerReq.email.isValidEmail()
+        registerReq.password.isValidPassword()
     }
 
 
