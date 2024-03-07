@@ -12,6 +12,8 @@ data class Transaction(
     var date: LocalDate,
     @Column(name = "amount")
     var amount: Double,
+    @Column(name = "type")
+    var type: String,
     @Column(name = "target_account_id")
     val targetAccountId: Long,
     @Column(name ="source_account_id")
