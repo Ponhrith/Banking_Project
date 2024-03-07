@@ -21,17 +21,17 @@ class TokenService(
         val claims = JwtClaimsSet.builder()
             .issuedAt(Instant.now())
             .expiresAt(Instant.now().plus(30L, ChronoUnit.DAYS))
-            .subject(user.name)
-            .claim("userId", user.id)
+            .subject(profile.fullname)
+            .claim("userId", profile.id)
             .build()
         return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).tokenValue
     }
 
-    fun parseToken(token: String): User? {
+    fun parseToken(token: String): Profile? {
         return try {
             val jwt = jwtDecoder.decode(token)
-            val userId = jwt.claims["userId"] as Long
-            userService.findById(userId)
+            val profileId = jwt.claims["profileId"] as Long
+            profileService.findById(profileId)
         } catch (e: Exception) {
             null
         }
