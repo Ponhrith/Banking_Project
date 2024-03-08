@@ -1,6 +1,5 @@
 package com.ponhrith.banking_project.model
 
-import com.nimbusds.openid.connect.sdk.claims.Address
 import jakarta.persistence.*
 
 @Entity
