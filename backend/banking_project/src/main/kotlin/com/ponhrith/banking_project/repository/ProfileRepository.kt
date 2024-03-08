@@ -8,4 +8,5 @@ import java.util.*
 @Repository
 interface ProfileRepository : JpaRepository<Profile, Long> {
     override fun findById(id: Long): Optional<Profile>
+    fun findByEmail(email: String): Profile?
 }
