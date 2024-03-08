@@ -1,9 +1,10 @@
 package com.ponhrith.banking_project.config
 
+import com.ponhrith.banking_project.service.AuthService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -11,18 +12,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken
-import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.CorsConfigurationSource
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Autowired
-    private lateinit var customUserDetailsService: AuthenticationService
+    private lateinit var customUserDetailsService: AuthService
 
     @Autowired
     private lateinit var jwtRequestFilter: JwtRequestFilter
@@ -34,12 +31,15 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
     @Throws(Exception::class)
-    public override fun configure(security: HttpSecurity) {
+    override fun configure(security: HttpSecurity) {
         security.csrf().disable()
             .authorizeRequests()
             .antMatchers("/authenticate", "/login", "/signup").permitAll()
-            .anyRequest().authenticated().and().sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .anyRequest().authenticated()
+            .and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+        // Register JwtRequestFilter before UsernamePasswordAuthenticationFilter
         security.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter::class.java)
     }
 
@@ -52,5 +52,12 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun authenticationManager(): AuthenticationManager {
         return super.authenticationManager()
+    }
+
+    @Bean
+    fun jwtRequestFilterRegistration(): FilterRegistrationBean<*> {
+        val filterRegistrationBean = FilterRegistrationBean(jwtRequestFilter)
+        filterRegistrationBean.isEnabled = false
+        return filterRegistrationBean
     }
 }
