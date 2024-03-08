@@ -23,7 +23,7 @@ class ProfileService(
     fun registerProfile(registerReq: RegisterReq): RegisterRes {
         validateRegisterRequest(registerReq)
 
-        val account = accountRepository.findByProfileId(registerReq.accountId).orElseThrow{
+        val account = accountRepository.findById(registerReq.accountId).orElseThrow{
             ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found")
         }
 
@@ -51,7 +51,12 @@ class ProfileService(
             fullname = savedProfile.fullname,
             address = savedProfile.address,
             email = savedProfile.email,
-            account = AccountRes(savedProfile.account.id, savedProfile.account.accountNumber),
+            account = AccountRes(
+                savedProfile.account.id,
+                savedProfile.account.type,
+                savedProfile.account.accountNumber,
+                savedProfile.account.balance,
+                ),
             password = savedProfile.password // Testing purpose
         )
     }

@@ -8,9 +8,9 @@ data class Account(
     @Id @GeneratedValue()
     val id: Long,
     @Column(name = "type")
-    var type: Long,
+    var type: String,
     @Column(name = "number")
-    var accountNumber: Long,
+    var accountNumber: String,
     @Column(name = "balance")
     var balance: Double,
 )
