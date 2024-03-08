@@ -12,8 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import javax.servlet.Filter
+
 
 @Configuration
 @EnableWebSecurity
@@ -40,7 +41,9 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
         // Register JwtRequestFilter before UsernamePasswordAuthenticationFilter
-        security.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter::class.java)
+        security.addFilterBefore(
+            jwtRequestFilter as Filter,
+            JwtRequestFilter::class.java as Class<out Filter>)
     }
 
     @Bean
