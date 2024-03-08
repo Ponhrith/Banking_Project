@@ -5,9 +5,7 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "profile")
 data class Profile(
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "profile_id_seq")
-    @SequenceGenerator(name = "profile_id_seq", sequenceName = "profile_id_seq")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     @Column(name = "fullname")
     var fullname: String,
@@ -18,8 +16,7 @@ data class Profile(
     @Column(name ="password")
     var password: String,
 
-){
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
-    lateinit var account: Account
-}
+    // One-to-many relationship with Account
+    @OneToMany(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var account: MutableList<Account> = mutableListOf()
+)

@@ -5,12 +5,13 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "support")
 data class Support(
-    @Id @GeneratedValue
-    val id: Long,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0,
     @Column(name = "message")
     var message: String,
-){
-    @ManyToOne
+) {
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")
     lateinit var profile: Profile
 }
+

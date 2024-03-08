@@ -61,7 +61,12 @@ class AuthController(
             ?: throw UsernameNotFoundException("User not found with email: ${loginReq.email}")
 
         // Access the account associated with the profile
-        val accountRes: AccountRes? = profile.account?.let { AccountRes(it.id, it.type, it.accountNumber, it.balance) }
+        val accountRes: AccountRes? = profile.account?.let { AccountRes(
+            it.first().id,
+            it.first().type,
+            it.first().accountNumber,
+            it.first().balance)
+        }
 
         // Construct the login response object
         val responseBody = LoginRes(account = accountRes)

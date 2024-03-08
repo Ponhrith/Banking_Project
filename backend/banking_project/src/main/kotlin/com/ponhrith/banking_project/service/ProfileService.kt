@@ -36,10 +36,10 @@ class ProfileService(
             address = registerReq.address,
             email = registerReq.email,
             password = encryptedPassword // Assigning encrypted password to the profile
+        )
 
-        ).apply {
-            this.account = account
-        }
+        // Add account to profile's list of accounts
+        profileEntity.account.add(account)
 
         // Save user
         val savedProfile = profileRepository.save(profileEntity)
@@ -52,11 +52,11 @@ class ProfileService(
             address = savedProfile.address,
             email = savedProfile.email,
             account = AccountRes(
-                savedProfile.account.id,
-                savedProfile.account.type,
-                savedProfile.account.accountNumber,
-                savedProfile.account.balance,
-                ),
+                savedProfile.account.first().id,
+                savedProfile.account.first().type,
+                savedProfile.account.first().accountNumber,
+                savedProfile.account.first().balance
+            ),
             password = savedProfile.password // Testing purpose
         )
     }
