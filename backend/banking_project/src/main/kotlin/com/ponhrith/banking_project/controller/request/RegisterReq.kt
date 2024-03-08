@@ -5,4 +5,5 @@ data class RegisterReq(
     var address: String,
     var email: String,
     var password: String,
+    val accountId: Long,
 )

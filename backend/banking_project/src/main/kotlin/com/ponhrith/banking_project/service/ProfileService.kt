@@ -4,62 +4,60 @@ import com.ponhrith.banking_project.common.isValidEmail
 import com.ponhrith.banking_project.common.isValidFullName
 import com.ponhrith.banking_project.common.isValidPassword
 import com.ponhrith.banking_project.controller.request.RegisterReq
+import com.ponhrith.banking_project.controller.response.AccountRes
 import com.ponhrith.banking_project.controller.response.RegisterRes
+import com.ponhrith.banking_project.model.Profile
 import com.ponhrith.banking_project.repository.AccountRepository
 import com.ponhrith.banking_project.repository.ProfileRepository
+import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.web.server.ResponseStatusException
 
 class ProfileService(
     private val profileRepository: ProfileRepository,
     private val accountRepository: AccountRepository
 ) {
+    private val log = LoggerFactory.getLogger(this::class.java)
 
     fun registerProfile(registerReq: RegisterReq): RegisterRes {
-        validateUserRequest(userReq)
+        validateRegisterRequest(registerReq)
 
-        // Get Department
-        val department = departmentRepository.findById(userReq.departmentId).orElseThrow {
-            ResponseStatusException(HttpStatus.NOT_FOUND, "Department not found")
+        val account = accountRepository.findByProfileId(registerReq.accountId).orElseThrow{
+            ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found")
         }
 
         val passwordEncoder = BCryptPasswordEncoder()
-        val generator = PasswordGenerator()
-        val generatedPassword = generator.password(8)
-        val encryptedPassword = passwordEncoder.encode(generatedPassword)
-        log.info("The generated password is: $generatedPassword")
+        val encryptedPassword = passwordEncoder.encode(registerReq.password) // Encrypting the password
 
         // Initialize User
-        val userEntity = User(
-            username = userReq.username,
-            gender = userReq.gender,
-            role = userReq.role,
-            password = encryptedPassword,
-            email = userReq.email
+        val profileEntity = Profile(
+            fullname = registerReq.fullname,
+            address = registerReq.address,
+            email = registerReq.email,
+            password = encryptedPassword // Assigning encrypted password to the profile
+
         ).apply {
-            this.department = department
+            this.account = account
         }
 
         // Save user
-        val savedUser = userRepository.save(userEntity)
-        log.info("$savedUser has been added")
-
+        val savedProfile = profileRepository.save(profileEntity)
+        log.info("$savedProfile has been added")
 
         // Return user response
-        return UserRes(
-            id = savedUser.id,
-            username = savedUser.username,
-            gender = savedUser.gender,
-            role = savedUser.role,
-            department = DepartmentRes(savedUser.department.id, savedUser.department.name),
-            password = generatedPassword,
-            email = savedUser.email
+        return RegisterRes(
+            id = savedProfile.id,
+            fullname = savedProfile.fullname,
+            address = savedProfile.address,
+            email = savedProfile.email,
+            account = AccountRes(savedProfile.account.id, savedProfile.account.accountNumber),
+            password = savedProfile.password // Testing purpose
         )
     }
-
     private fun validateRegisterRequest(registerReq: RegisterReq) {
         registerReq.fullname.isValidFullName()
         registerReq.email.isValidEmail()
         registerReq.password.isValidPassword()
     }
-
-
 }
