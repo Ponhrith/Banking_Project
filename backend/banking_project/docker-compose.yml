@@ -1,17 +1,19 @@
-version: '3.3'
+version: '3.8'
+
 services:
   db:
     image: mysql:latest
-    container_name: avows
+    restart: always
     environment:
-      MYSQL_DATABASE: 'banking'
-      MYSQL_USER: 'root'
-      MYSQL_PASSWORD: 'root'
-      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: banking
+      MYSQL_USER: user_one
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: avows04032024
     ports:
-      - '3306:3306'
+      - "3306:3306"
     volumes:
-      - my-db:/var/lib/mysql
-volumes:
-  my-db:
+      - mysql_data:/var/lib/mysql
 
+volumes:
+  mysql_data:
+    driver: local
