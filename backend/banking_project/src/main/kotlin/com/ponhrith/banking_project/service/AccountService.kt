@@ -1,5 +1,6 @@
 package com.ponhrith.banking_project.service
 
+import com.ponhrith.banking_project.common.isValidAccountType
 import com.ponhrith.banking_project.controller.request.AccountReq
 import com.ponhrith.banking_project.controller.response.AccountRes
 import com.ponhrith.banking_project.model.Account
@@ -16,6 +17,9 @@ class AccountService(
     private val profileRepository: ProfileRepository
 ) {
     fun createAccount(accountReq: AccountReq): AccountRes {
+        // Check if the account type is valid
+        accountReq.type.isValidAccountType()
+
         // Check if the profile exists
         val profileOptional = profileRepository.findById(accountReq.profileId)
         val profile = profileOptional.orElseThrow {
