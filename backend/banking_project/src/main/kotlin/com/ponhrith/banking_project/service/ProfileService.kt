@@ -12,8 +12,10 @@ import com.ponhrith.banking_project.repository.ProfileRepository
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 
+@Service
 class ProfileService(
     private val profileRepository: ProfileRepository,
     private val accountRepository: AccountRepository
