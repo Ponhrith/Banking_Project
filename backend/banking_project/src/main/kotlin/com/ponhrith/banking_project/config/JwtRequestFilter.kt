@@ -15,12 +15,9 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-class JwtRequestFilter : Filter {
+class JwtRequestFilter(private val userDetailsService: AuthService) : Filter {
     @Autowired
     private lateinit var jwtUtil: JwtUtil
-
-    @Autowired
-    private lateinit var userDetailsService: AuthService
 
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
         val httpRequest = request as HttpServletRequest

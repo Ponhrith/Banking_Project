@@ -20,11 +20,7 @@ import org.springframework.web.servlet.DispatcherServlet
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig : WebSecurityConfigurerAdapter() {
-    @Autowired
-    private lateinit var customUserDetailsService: AuthService
-
-    @Autowired
+class SecurityConfig(private val customUserDetailsService: AuthService) : WebSecurityConfigurerAdapter() {
     private lateinit var jwtRequestFilter: JwtRequestFilter
 
     @Throws(Exception::class)
@@ -43,7 +39,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
         // Register JwtRequestFilter before UsernamePasswordAuthenticationFilter
-        security.addFilterBefore(jwtRequestFilter, Filter::class.java)
+        security.addFilterBefore(jwtRequestFilter(), Filter::class.java)
     }
 
     @Bean
@@ -59,7 +55,6 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Bean
     fun jwtRequestFilter(): JwtRequestFilter {
-        return JwtRequestFilter()
+        return JwtRequestFilter(customUserDetailsService)
     }
-
 }
