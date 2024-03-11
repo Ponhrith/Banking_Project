@@ -10,7 +10,7 @@ data class Account(
     val id: Long = 0,
     @Column(name = "type")
     var type: String,
-    @Column(name = "number")
+    @Column(name = "account_number")
     var accountNumber: String,
     @Column(name = "balance")
     var balance: Double,

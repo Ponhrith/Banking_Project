@@ -16,45 +16,44 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import javax.servlet.Filter
 import jakarta.servlet.FilterRegistration
 import org.springframework.boot.web.servlet.ServletRegistrationBean
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.servlet.DispatcherServlet
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(private val customUserDetailsService: AuthService) : WebSecurityConfigurerAdapter() {
-    private lateinit var jwtRequestFilter: JwtRequestFilter
 
-    @Throws(Exception::class)
+    @Bean
+    fun jwtRequestFilter(): JwtRequestFilter {
+        return JwtRequestFilter(customUserDetailsService)
+    }
+
     override fun configure(auth: AuthenticationManagerBuilder) {
-        super.configure(auth)
         auth.userDetailsService(customUserDetailsService)
     }
 
-    @Throws(Exception::class)
     override fun configure(security: HttpSecurity) {
         security.csrf().disable()
             .authorizeRequests()
-            .antMatchers("/authenticate", "/login", "/signup").permitAll()
+            .antMatchers("/authenticate", "/login", "/signup", "/api/v1/profile**").permitAll()
             .anyRequest().authenticated()
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
+        // Retrieve the JwtRequestFilter bean from the Spring context
+        val filter = jwtRequestFilter()
+
         // Register JwtRequestFilter before UsernamePasswordAuthenticationFilter
-        security.addFilterBefore(jwtRequestFilter(), Filter::class.java)
+        security.addFilterBefore(filter, UsernamePasswordAuthenticationFilter::class.java)
+    }
+
+    @Bean
+    override fun authenticationManagerBean(): AuthenticationManager {
+        return super.authenticationManagerBean()
     }
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
-    }
-
-    @Bean
-    @Throws(Exception::class)
-    override fun authenticationManager(): AuthenticationManager {
-        return super.authenticationManager()
-    }
-
-    @Bean
-    fun jwtRequestFilter(): JwtRequestFilter {
-        return JwtRequestFilter(customUserDetailsService)
     }
 }
