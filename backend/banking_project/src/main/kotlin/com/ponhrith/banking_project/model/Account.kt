@@ -1,6 +1,7 @@
 package com.ponhrith.banking_project.model
 
-import jakarta.persistence.*
+import javax.persistence.*
+
 
 @Entity
 @Table(name = "account")
