@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*
 class ProfileController(private val profileService: ProfileService) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    @CrossOrigin("http://localhost:8080/")
     @PostMapping
     fun registerProfile(@RequestBody registerReq: RegisterReq): RegisterRes {
         return profileService.registerProfile(registerReq)
