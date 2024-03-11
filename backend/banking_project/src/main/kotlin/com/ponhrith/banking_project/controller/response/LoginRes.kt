@@ -1,7 +1,9 @@
 package com.ponhrith.banking_project.controller.response
 
-data class LoginRes(
-    var id: Long = 0,
-    var account: AccountRes? = null
+import com.ponhrith.banking_project.model.Profile
 
+data class LoginRes(
+    val success: Boolean,
+    val message: String,
+    val profile: Profile? = null
 )

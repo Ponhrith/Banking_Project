@@ -4,7 +4,6 @@ import com.ponhrith.banking_project.common.isValidAccountType
 import com.ponhrith.banking_project.controller.request.AccountReq
 import com.ponhrith.banking_project.controller.response.AccountRes
 import com.ponhrith.banking_project.model.Account
-import com.ponhrith.banking_project.model.Profile
 import com.ponhrith.banking_project.repository.AccountRepository
 import com.ponhrith.banking_project.repository.ProfileRepository
 import org.springframework.http.HttpStatus
