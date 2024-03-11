@@ -1,12 +1,16 @@
 package com.ponhrith.banking_project.common
 
-import com.ponhrith.banking_project.common.Constants.TYPE
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
-fun String.isValidType() {
-    if (!TYPE.contains(this))
-        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid type")
+fun String.isValidTransactionType() {
+    if (!Constants.TRANSACTION_TYPE.contains(this))
+        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid transaction type")
+}
+
+fun String.isValidAccountType() {
+    if (!Constants.ACCOUNT_TYPE.contains(this))
+        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid account type")
 }
 
 fun String.isValidEmail(): Boolean {

@@ -19,41 +19,45 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.servlet.DispatcherServlet
 
-@Configuration
-@EnableWebSecurity
-class SecurityConfig(private val customUserDetailsService: AuthService) : WebSecurityConfigurerAdapter() {
-
-    @Bean
-    fun jwtRequestFilter(): JwtRequestFilter {
-        return JwtRequestFilter(customUserDetailsService)
-    }
-
-    override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.userDetailsService(customUserDetailsService)
-    }
-
-    override fun configure(security: HttpSecurity) {
-        security.csrf().disable()
-            .authorizeRequests()
-            .antMatchers("/authenticate", "/login", "/signup", "/api/v1/profile**").permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
-        // Retrieve the JwtRequestFilter bean from the Spring context
-        val filter = jwtRequestFilter()
-
-        // Register JwtRequestFilter before UsernamePasswordAuthenticationFilter
-        security.addFilterBefore(filter, UsernamePasswordAuthenticationFilter::class.java)
-    }
-
-    @Bean
-    override fun authenticationManagerBean(): AuthenticationManager {
-        return super.authenticationManagerBean()
-    }
-
-    @Bean
-    fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder()
-    }
-}
+//@Configuration
+//@EnableWebSecurity
+//class SecurityConfig(private val customUserDetailsService: AuthService) : WebSecurityConfigurerAdapter() {
+//
+//    @Bean
+//    fun corsFilter(): CorsFilter {
+//        return CorsFilter()
+//    }
+//    @Bean
+//    fun jwtRequestFilter(): JwtRequestFilter {
+//        return JwtRequestFilter(customUserDetailsService)
+//    }
+//
+//    override fun configure(auth: AuthenticationManagerBuilder) {
+//        auth.userDetailsService(customUserDetailsService)
+//    }
+//
+//    override fun configure(security: HttpSecurity) {
+//        security.csrf().disable()
+//            .authorizeRequests()
+//            .antMatchers("/authenticate", "/login", "/signup", "/api/v1/profile**").permitAll()
+//            .anyRequest().authenticated()
+//            .and()
+//            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//
+//        // Retrieve the JwtRequestFilter bean from the Spring context
+//        val filter = jwtRequestFilter()
+//
+//        // Register JwtRequestFilter before UsernamePasswordAuthenticationFilter
+//        security.addFilterBefore(filter, UsernamePasswordAuthenticationFilter::class.java)
+//    }
+//
+//    @Bean
+//    override fun authenticationManagerBean(): AuthenticationManager {
+//        return super.authenticationManagerBean()
+//    }
+//
+//    @Bean
+//    fun passwordEncoder(): PasswordEncoder {
+//        return BCryptPasswordEncoder()
+//    }
+//}

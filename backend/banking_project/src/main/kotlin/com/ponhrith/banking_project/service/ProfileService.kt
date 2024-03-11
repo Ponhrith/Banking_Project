@@ -25,9 +25,9 @@ class ProfileService(
     fun registerProfile(registerReq: RegisterReq): RegisterRes {
         validateRegisterRequest(registerReq)
 
-        val account = accountRepository.findById(registerReq.accountId).orElseThrow{
-            ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found")
-        }
+//        val account = accountRepository.findById(registerReq.accountId).orElseThrow{
+//            ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found")
+//        }
 
         val passwordEncoder = BCryptPasswordEncoder()
         val encryptedPassword = passwordEncoder.encode(registerReq.password) // Encrypting the password
@@ -41,7 +41,7 @@ class ProfileService(
         )
 
         // Add account to profile's list of accounts
-        profileEntity.account.add(account)
+//        profileEntity.account.add(account)
 
         // Save user
         val savedProfile = profileRepository.save(profileEntity)
@@ -53,12 +53,12 @@ class ProfileService(
             fullname = savedProfile.fullname,
             address = savedProfile.address,
             email = savedProfile.email,
-            account = AccountRes(
-                savedProfile.account.first().id,
-                savedProfile.account.first().type,
-                savedProfile.account.first().accountNumber,
-                savedProfile.account.first().balance
-            ),
+//            account = AccountRes(
+//                savedProfile.account.first().id,
+//                savedProfile.account.first().type,
+//                savedProfile.account.first().accountNumber,
+//                savedProfile.account.first().balance
+//            ),
             password = savedProfile.password // Testing purpose
         )
     }
