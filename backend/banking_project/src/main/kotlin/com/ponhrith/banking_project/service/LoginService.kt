@@ -5,12 +5,14 @@ import com.ponhrith.banking_project.controller.response.LoginRes
 import com.ponhrith.banking_project.model.Profile
 import com.ponhrith.banking_project.repository.ProfileRepository
 import org.springframework.http.HttpStatus
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 
 @Service
 class LoginService(
-    private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository,
+    private val passwordEncoder: PasswordEncoder // Inject PasswordEncoder
 ) {
     fun login(loginReq: LoginReq): LoginRes {
         // Check if email and password are empty
@@ -23,7 +25,7 @@ class LoginService(
             ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email or password")
 
         // Verify the password
-        if (profile.password != loginReq.password) {
+        if (!passwordEncoder.matches(loginReq.password, profile.password)) {
             return LoginRes(success = false, message = "Invalid email or password")
         }
 
