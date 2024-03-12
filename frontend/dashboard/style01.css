@@ -1,0 +1,202 @@
+body {
+    background-color: #CCCCFF;
+    font-family: "Poppins", sans-serif;
+}
+
+p {
+    margin: 0;
+}
+
+#contact-form {
+    background-color: white;
+    border-radius: 7px;
+    
+}
+
+#form-title {
+    padding: 15px;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+    background-color: #F2F2F2;
+}
+
+#form-content {
+    padding: 15px;
+    background-color: white;
+}
+
+#support-content {
+    width: 100%;
+    height: 200px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 17px;
+}
+
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 13px;
+    width: 13px;
+    left: 1px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(15px);
+    -ms-transform: translateX(15px);
+    transform: translateX(15px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.switch p {
+    position: absolute;
+    margin: 0;
+    left: calc(100% + 10px); /* Position the text relative to the parent switch */
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap; /* Prevent text from wrapping onto multiple lines */
+}
+
+#content-button {
+    background-color: blue;
+    color: white;
+    margin-top: 15px;
+    border-radius: 3px;
+    width: 50px;
+    height: 28px;
+    border-color: transparent;
+}
+
+#first-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.edit-button {
+    background-color: blue;
+    color: white;
+    border-radius: 3px;
+    width: 120px;
+    height: 35px;
+    font-size: 15px;
+    border-color: transparent;
+}
+
+#second-row {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+#profile-pic {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 350px;
+    height: 300px;
+    margin-right: 20px;
+    background-color: white;
+    border-radius: 7px;
+    
+}
+
+#profile-img{
+    padding-top: 30px;
+    width: 200px;
+    height: 200px;
+}
+
+#profile-info{
+    margin-left: 20px;
+    width: 100vw;
+    height: 300px;
+    background-color: white;
+    border-radius: 7px;
+}
+
+.bold {
+    font-weight: 600;
+}
+
+.extra-space {
+    padding-bottom: 10px;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.column {
+    flex: 50%;
+    flex-direction: column;
+}
+
+.column-4 {
+    flex: 25%;
+    flex-direction: column;
+    background-color: white;
+    padding-right: 15px;
+}
+
+input {
+    height: 25px;
+    width: 100%;
+}
+
+.column-3 {
+    width: 75%;
+    padding-right: 25px;
+}
+
+#line-graph {
+    width: 100%;
+    height: 300px;
+}
