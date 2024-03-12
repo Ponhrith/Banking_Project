@@ -1,10 +1,9 @@
-// app.js
 const app = Vue.createApp({
   data() {
     return {
       signUpMode: false,
       loginForm: {
-        accountNumber: '',
+        email: '',
         password: ''
       },
       registerForm: {
@@ -30,13 +29,47 @@ const app = Vue.createApp({
         field.type = this.showPassword ? 'text' : 'password';
       });
     },
-    submitLoginForm() {
-      // Handle login form submission
-      console.log('Login form submitted:', this.loginForm);
+    async submitLoginForm() {
+      try {
+        const response = await fetch('http://localhost:8080/api/v1/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(this.loginForm)
+        });
+        const data = await response.json();
+        if (response.ok) {
+          alert('Login successful!'); // Show success message
+          // Optionally, you can redirect the user to another page
+        } else {
+          alert('Login failed: ' + data.message); // Show error message
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while logging in.'); // Show generic error message
+      }
     },
-    submitRegisterForm() {
-      // Handle register form submission
-      console.log('Register form submitted:', this.registerForm);
+    async submitRegisterForm() {
+      try {
+        const response = await fetch('http://localhost:8080/api/v1/profile', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(this.registerForm)
+        });
+        const data = await response.json();
+        if (response.ok) {
+          alert('Registration successful!'); // Show success message
+          // Optionally, you can redirect the user to another page
+        } else {
+          alert('Registration failed: ' + data.message); // Show error message
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while registering.'); // Show generic error message
+      }
     }
   }
 });

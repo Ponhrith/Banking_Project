@@ -12,7 +12,7 @@
     <div class="container" :class="{ 'sign-up-mode': signUpMode }">
       <div class="forms-container">
         <div class="signin-signup">
-          <form v-if="!signUpMode" class="sign-in-form">
+          <form v-if="!signUpMode" class="sign-in-form" @submit.prevent="submitLoginForm">
             <h2 class="title">Login</h2>
             <div class="input-field">
               <i class="fas fa-envelope"></i>
@@ -23,7 +23,7 @@
               <input type="password" placeholder="Password" v-model="loginForm.password"/>
               <span class="password-toggle-icon" @click="togglePassword"><i class="fas" :class="showPasswordIcon"></i></span>
             </div>
-            <input type="submit" value="Login" class="btn solid" @click.prevent="submitLoginForm" />
+            <input type="submit" value="Login" class="btn solid" />
           </form>
           <form v-else class="sign-up-form">
             <h2 class="title">Register</h2>
