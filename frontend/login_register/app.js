@@ -7,7 +7,7 @@ const app = Vue.createApp({
         password: ''
       },
       registerForm: {
-        fullName: '',
+        fullname: '',
         address: '',
         email: '',
         password: '',
