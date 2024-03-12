@@ -5,62 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
   <title>Login & Register</title>
+  
+  <link rel="stylesheet" href="/bootstrap-4.0.0-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="style.css">
+
 </head>
-<body>
+<body>  
   <div id="app">
-    <div class="container" :class="{ 'sign-up-mode': signUpMode }">
-      <div class="forms-container">
+    <div class="alert alert-success text-center" role="alert" v-if="loginSuccess">
+      Login successful!
+    </div>
+    <div class="custom-container" :class="{ 'sign-up-mode': signUpMode }">
+      <div class="custom-forms-container">
         <div class="signin-signup">
           <form v-if="!signUpMode" class="sign-in-form" @submit.prevent="submitLoginForm">
             <h2 class="title">Login</h2>
-            <div class="input-field">
+            <div class="custom-input-field">
               <i class="fas fa-envelope"></i>
               <input type="text" placeholder="Email" v-model="loginForm.email"/>
             </div>
-            <div class="input-field">
+            <div class="custom-input-field">
               <i class="fas fa-lock"></i>
               <input :type="loginPasswordFieldType" placeholder="Password" v-model="loginForm.password"/>
               <span class="password-toggle-icon" @click="togglePassword('login')"><i class="fas" :class="showLoginPassword ? 'fa-eye-slash' : 'fa-eye'"></i></span>
             </div>
             <p class="error-message" v-if="loginError">{{ loginError }}</p> <!-- Display login error message -->
-            <input type="submit" value="Login" class="btn solid" />
+            <input type="submit" value="Login" class="btnn solid" />
           </form>
           
           <form v-else class="sign-up-form">
             <h2 class="title">Register</h2>
-            <div class="input-field">
+            <div class="custom-input-field">
               <i class="fas fa-user"></i>
               <input type="text" placeholder="Full Name" v-model="registerForm.fullname"/>
             </div>
-            <div class="input-field">
+            <div class="custom-input-field">
               <i class="fas fa-address-book"></i>
               <input type="text" placeholder="Address" v-model="registerForm.address"/>
             </div>
-            <div class="input-field">
+            <div class="custom-input-field">
               <i class="fas fa-envelope"></i>
               <input type="email" placeholder="Email" v-model="registerForm.email"/>
             </div>
-            <div class="input-field">
+            <div class="custom-input-field">
               <i class="fas fa-lock"></i>
               <input :type="registerPasswordFieldType" placeholder="Password" v-model="registerForm.password"/>
               <span class="password-toggle-icon" @click="togglePassword('register')"><i class="fas" :class="showRegisterPassword ? 'fa-eye-slash' : 'fa-eye'"></i></span>
             </div>
-            <div class="input-field" :class="{ 'error': passwordMatchError }">
+            <div class="custom-input-field" :class="{ 'error': passwordMatchError }">
               <i class="fas fa-lock"></i>
               <input :type="registerConfirmPasswordFieldType" placeholder="Confirm Password" v-model="registerForm.confirmPassword"/>              
               <span class="password-toggle-icon" @click="togglePassword('confirm')"><i class="fas" :class="showRegisterConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"></i></span>            </div>
             <p v-if="passwordMatchError" class="error-message">Please make sure your passwords match</p>            
-            <input type="submit" class="btn" value="Register" @click.prevent="submitRegisterForm" />
+            <input type="submit" class="btnn" value="Register" @click.prevent="submitRegisterForm" />
             <p class="social-text">Or sign up with social platforms</p>
             <div class="social-media">
-              <a href="#" class="social-icon">
+              <a href="#" class="custom-social-icon">
                 <i class="fab fa-facebook-f"></i>
               </a>
-              <a href="#" class="social-icon">
+              <a href="#" class="custom-social-icon">
                 <i class="fab fa-whatsapp"></i>
               </a>
-              <a href="#" class="social-icon">
+              <a href="#" class="custom-social-icon">
                 <i class="fab fa-telegram"></i>
               </a>
             </div>
@@ -68,22 +74,22 @@
         </div>
       </div>
 
-      <div class="panels-container">
-        <div class="panel left-panel">
+      <div class="custom-panels-container">
+        <div class="custom-panel left-panel">
           <div class="content">
             <h3>Don't have an account?</h3>
             <p></p>
-            <button class="btn transparent" @click="toggleMode('register')">
+            <button class="btnn transparent" @click="toggleMode('register')">
               Register
             </button>
           </div>
           <img src="image/shopping-bag.png" class="image" alt="" />
         </div>
-        <div class="panel right-panel">
+        <div class="custom-panel right-panel">
           <div class="content">
             <h3>Already have an account?</h3>
             <p></p>
-            <button class="btn transparent" @click="toggleMode('login')">
+            <button class="btnn transparent" @click="toggleMode('login')">
               Login
             </button>
           </div>
@@ -93,6 +99,7 @@
     </div>
   </div>
 
+  <script src="/bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
   <script src="https://unpkg.com/vue@3"></script>
   <script src="app.js"></script>
 </body>

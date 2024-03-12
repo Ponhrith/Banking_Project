@@ -20,6 +20,7 @@ const app = Vue.createApp({
       registerPasswordFieldType: 'password',
       registerConfirmPasswordFieldType: 'password',
       loginError: '',
+      loginSuccess: false,
     };
   },
   methods: {
@@ -62,8 +63,10 @@ const app = Vue.createApp({
         });
     
         if (response.ok) {
-          alert('Login successful!'); // Show success message
-          // Optionally, you can redirect the user to another page
+          this.loginSuccess = true; // Set login success to true
+          setTimeout(() => {
+            this.loginSuccess = false; // Reset login success after 3 seconds
+          }, 3000);
         } else {
           this.loginError = 'Invalid email or password!'; // Set login error message
           setTimeout(() => {
