@@ -66,6 +66,9 @@ const app = Vue.createApp({
           // Optionally, you can redirect the user to another page
         } else {
           this.loginError = 'Invalid email or password!'; // Set login error message
+          setTimeout(() => {
+            this.loginError = '';
+          }, 3000);
         }
       } catch (error) {
         console.error('Error:', error);
