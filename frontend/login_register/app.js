@@ -19,6 +19,7 @@ const app = Vue.createApp({
       loginPasswordFieldType: 'password',
       registerPasswordFieldType: 'password',
       registerConfirmPasswordFieldType: 'password',
+      loginError: '',
     };
   },
   methods: {
@@ -39,6 +40,15 @@ const app = Vue.createApp({
     },
     
     async submitLoginForm() {
+      // Reset login error message
+      this.loginError = '';
+
+      // Check if email and password fields are empty
+      if (!this.loginForm.email || !this.loginForm.password) {
+        this.loginError = 'Fields cannot be empty!'; // Set login error message
+        return;
+      }
+
       try {
         const response = await fetch('http://localhost:8080/api/v1/auth/login', {
           method: 'POST',
@@ -47,12 +57,17 @@ const app = Vue.createApp({
           },
           body: JSON.stringify(this.loginForm)
         });
-        const data = await response.json();
+
         if (response.ok) {
           alert('Login successful!'); // Show success message
           // Optionally, you can redirect the user to another page
         } else {
-          alert('Login failed: ' + data.message); // Show error message
+          const data = await response.json();
+          if (data && data.error === 'Invalid credentials') {
+            this.loginError = 'Invalid email or password!'; // Set login error message
+          } else {
+            alert('Login failed: ' + data.message); // Show other error messages
+          }
         }
       } catch (error) {
         console.error('Error:', error);

@@ -23,8 +23,10 @@
               <input :type="loginPasswordFieldType" placeholder="Password" v-model="loginForm.password"/>
               <span class="password-toggle-icon" @click="togglePassword('login')"><i class="fas" :class="showLoginPassword ? 'fa-eye-slash' : 'fa-eye'"></i></span>
             </div>
+            <p class="error-message" v-if="loginError">{{ loginError }}</p> <!-- Display login error message -->
             <input type="submit" value="Login" class="btn solid" />
           </form>
+          
           <form v-else class="sign-up-form">
             <h2 class="title">Register</h2>
             <div class="input-field">
