@@ -42,13 +42,13 @@ const app = Vue.createApp({
     async submitLoginForm() {
       // Reset login error message
       this.loginError = '';
-
+    
       // Check if email and password fields are empty
       if (!this.loginForm.email || !this.loginForm.password) {
         this.loginError = 'Fields cannot be empty!'; // Set login error message
         return;
       }
-
+    
       try {
         const response = await fetch('http://localhost:8080/api/v1/auth/login', {
           method: 'POST',
@@ -57,23 +57,19 @@ const app = Vue.createApp({
           },
           body: JSON.stringify(this.loginForm)
         });
-
+    
         if (response.ok) {
           alert('Login successful!'); // Show success message
           // Optionally, you can redirect the user to another page
         } else {
-          const data = await response.json();
-          if (data && data.error === 'Invalid credentials') {
-            this.loginError = 'Invalid email or password!'; // Set login error message
-          } else {
-            alert('Login failed: ' + data.message); // Show other error messages
-          }
+          this.loginError = 'Invalid email or password!'; // Set login error message
         }
       } catch (error) {
         console.error('Error:', error);
         alert('An error occurred while logging in.'); // Show generic error message
       }
     },
+    
     async submitRegisterForm() {
       // Check if passwords match
       if (this.registerForm.password !== this.registerForm.confirmPassword) {
