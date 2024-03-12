@@ -1,57 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script
-      src="https://kit.fontawesome.com/64d58efce2.js"
-      crossorigin="anonymous"
-    ></script>
-    <link rel="stylesheet" href="style.css" />
-    <title>Login & Register</title>
-  </head>
-  <body>
-    <div class="container">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Register</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <div class="container" :class="{ 'sign-up-mode': signUpMode }">
       <div class="forms-container">
         <div class="signin-signup">
-          <form action="#" class="sign-in-form">
+          <form v-if="!signUpMode" class="sign-in-form">
             <h2 class="title">Login</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input type="text" placeholder="Account Number" />
+              <input type="text" placeholder="Account Number" v-model="loginForm.accountNumber"/>
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
-              <input type="password" placeholder="Password" />
-              <span class="password-toggle-icon"><i class="fas fa-eye"></i></span>
+              <input type="password" placeholder="Password" v-model="loginForm.password"/>
+              <span class="password-toggle-icon" @click="togglePassword"><i class="fas" :class="showPasswordIcon"></i></span>
             </div>
-            <input type="submit" value="Login" class="btn solid" />
+            <input type="submit" value="Login" class="btn solid" @click.prevent="submitLoginForm" />
           </form>
-          <form action="#" class="sign-up-form">
+          <form v-else class="sign-up-form">
             <h2 class="title">Register</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input type="text" placeholder="Full Name" />
+              <input type="text" placeholder="Full Name" v-model="registerForm.fullName"/>
             </div>
             <div class="input-field">
               <i class="fas fa-address-book"></i>
-              <input type="text" placeholder="Address" />
+              <input type="text" placeholder="Address" v-model="registerForm.address"/>
             </div>
             <div class="input-field">
               <i class="fas fa-envelope"></i>
-              <input type="email" placeholder="Email" />
+              <input type="email" placeholder="Email" v-model="registerForm.email"/>
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
-              <input type="password" placeholder="Password" />
-              <span class="password-toggle-icon"><i class="fas fa-eye"></i></span>
+              <input type="password" placeholder="Password" v-model="registerForm.password"/>
+              <span class="password-toggle-icon" @click="togglePassword"><i class="fas" :class="showPasswordIcon"></i></span>
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
-              <input type="password" placeholder="Confirm Password" />
-              <span class="password-toggle-icon"><i class="fas fa-eye"></i></span>
+              <input type="password" placeholder="Confirm Password" v-model="registerForm.confirmPassword"/>
+              <span class="password-toggle-icon" @click="togglePassword"><i class="fas" :class="showPasswordIcon"></i></span>
             </div>
-            <input type="submit" class="btn" value="Register" />
+            <input type="submit" class="btn" value="Register" @click.prevent="submitRegisterForm" />
             <p class="social-text">Or sign up with social platforms</p>
             <div class="social-media">
               <a href="#" class="social-icon">
@@ -73,7 +70,7 @@
           <div class="content">
             <h3>Don't have an account?</h3>
             <p></p>
-            <button class="btn transparent" id="sign-up-btn">
+            <button class="btn transparent" @click="toggleMode('register')">
               Register
             </button>
           </div>
@@ -83,7 +80,7 @@
           <div class="content">
             <h3>Already have an account?</h3>
             <p></p>
-            <button class="btn transparent" id="sign-in-btn">
+            <button class="btn transparent" @click="toggleMode('login')">
               Login
             </button>
           </div>
@@ -91,7 +88,9 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <script src="app.js"></script>
-  </body>
+  <script src="https://unpkg.com/vue@3"></script>
+  <script src="app.js"></script>
+</body>
 </html>

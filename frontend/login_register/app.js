@@ -1,27 +1,44 @@
-const sign_in_btn = document.querySelector("#sign-in-btn");
-const sign_up_btn = document.querySelector("#sign-up-btn");
-const container = document.querySelector(".container");
-
-sign_up_btn.addEventListener("click", () => {
-  container.classList.add("sign-up-mode");
-});
-
-sign_in_btn.addEventListener("click", () => {
-  container.classList.remove("sign-up-mode");
-});
-
-
-const passwordField = document.querySelector("input[type='password']");
-const togglePassword = document.querySelector(".password-toggle-icon i");
-
-togglePassword.addEventListener("click", function () {
-  if (passwordField.type === "password") {
-    passwordField.type = "text";
-    togglePassword.classList.remove("fa-eye");
-    togglePassword.classList.add("fa-eye-slash");
-  } else {
-    passwordField.type = "password";
-    togglePassword.classList.remove("fa-eye-slash");
-    togglePassword.classList.add("fa-eye");
+// app.js
+const app = Vue.createApp({
+  data() {
+    return {
+      signUpMode: false,
+      loginForm: {
+        accountNumber: '',
+        password: ''
+      },
+      registerForm: {
+        fullName: '',
+        address: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+      },
+      showPassword: false,
+      showPasswordIcon: 'fa-eye'
+    };
+  },
+  methods: {
+    toggleMode(mode) {
+      this.signUpMode = (mode === 'register');
+    },
+    togglePassword() {
+      this.showPassword = !this.showPassword;
+      this.showPasswordIcon = this.showPassword ? 'fa-eye-slash' : 'fa-eye';
+      const passwordFields = document.querySelectorAll('input[type="password"]');
+      passwordFields.forEach(field => {
+        field.type = this.showPassword ? 'text' : 'password';
+      });
+    },
+    submitLoginForm() {
+      // Handle login form submission
+      console.log('Login form submitted:', this.loginForm);
+    },
+    submitRegisterForm() {
+      // Handle register form submission
+      console.log('Register form submitted:', this.registerForm);
+    }
   }
 });
+
+app.mount('#app');
