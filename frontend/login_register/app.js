@@ -13,23 +13,31 @@ const app = Vue.createApp({
         password: '',
         confirmPassword: ''
       },
-      showPassword: false,
-      showPasswordIcon: 'fa-eye',
-      passwordMatchError: false // Added data property for password match error
+      showLoginPassword: false,
+      showRegisterPassword: false,
+      showRegisterConfirmPassword: false,
+      loginPasswordFieldType: 'password',
+      registerPasswordFieldType: 'password',
+      registerConfirmPasswordFieldType: 'password',
     };
   },
   methods: {
     toggleMode(mode) {
       this.signUpMode = (mode === 'register');
     },
-    togglePassword() {
-      this.showPassword = !this.showPassword;
-      this.showPasswordIcon = this.showPassword ? 'fa-eye-slash' : 'fa-eye';
-      const passwordFields = document.querySelectorAll('input[type="password"]');
-      passwordFields.forEach(field => {
-        field.type = this.showPassword ? 'text' : 'password';
-      });
+    togglePassword(form) {
+      if (form === 'login') {
+        this.showLoginPassword = !this.showLoginPassword;
+        this.loginPasswordFieldType = this.showLoginPassword ? 'text' : 'password';
+      } else if (form === 'register') {
+        this.showRegisterPassword = !this.showRegisterPassword;
+        this.registerPasswordFieldType = this.showRegisterPassword ? 'text' : 'password';
+      } else if (form === 'confirm') {
+        this.showRegisterConfirmPassword = !this.showRegisterConfirmPassword;
+        this.registerConfirmPasswordFieldType = this.showRegisterConfirmPassword ? 'text' : 'password';
+      }
     },
+    
     async submitLoginForm() {
       try {
         const response = await fetch('http://localhost:8080/api/v1/auth/login', {
