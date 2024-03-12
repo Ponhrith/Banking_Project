@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/profile")
-@CrossOrigin("http://localhost:8080/")
+@CrossOrigin("http://127.0.0.1:5500")
 class ProfileController(private val profileService: ProfileService) {
     private val log = LoggerFactory.getLogger(this::class.java)
 

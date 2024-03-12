@@ -26,6 +26,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             .cors().and()
             .csrf().disable()
             .authorizeRequests()
+            .antMatchers("/api/v1/profile","/api/v1/auth/*").permitAll() // Permit access to this endpoint without authentication
             .anyRequest().authenticated().and()
             .formLogin().and()
             .httpBasic()
