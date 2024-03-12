@@ -93,6 +93,14 @@ const app = Vue.createApp({
         return;
       }
 
+      if (this.registerForm.password !== this.registerForm.confirmPassword) {
+        this.registerError = 'Passwords do not match!'; // Set register error message
+        setTimeout(() => {
+          this.registerError = '';
+        }, 3000);
+        return;
+      }
+
       // If passwords match, proceed with registration
       try {
         const response = await fetch('http://localhost:8080/api/v1/profile', {
