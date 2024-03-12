@@ -438,6 +438,16 @@ form.sign-in-form {
   position: fixed;
   top: 0;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate3d(-50%, 0, 0); /* Center the alert horizontally */
   z-index: 1000; /* Ensure the alert is above other elements */
+  animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translate3d(-50%, -100%, 0); /* Start from above the viewport */
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0); /* End at the top of the viewport */
+  }
 }
