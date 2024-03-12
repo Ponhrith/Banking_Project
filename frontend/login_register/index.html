@@ -44,11 +44,12 @@
               <input type="password" placeholder="Password" v-model="registerForm.password"/>
               <span class="password-toggle-icon" @click="togglePassword"><i class="fas" :class="showPasswordIcon"></i></span>
             </div>
-            <div class="input-field">
+            <div class="input-field" :class="{ 'error': passwordMatchError }">
               <i class="fas fa-lock"></i>
               <input type="password" placeholder="Confirm Password" v-model="registerForm.confirmPassword"/>
               <span class="password-toggle-icon" @click="togglePassword"><i class="fas" :class="showPasswordIcon"></i></span>
             </div>
+            <p v-if="passwordMatchError" class="error-message">Please make sure your passwords match</p>            
             <input type="submit" class="btn" value="Register" @click.prevent="submitRegisterForm" />
             <p class="social-text">Or sign up with social platforms</p>
             <div class="social-media">

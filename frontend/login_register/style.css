@@ -423,3 +423,13 @@ form.sign-in-form {
     left: 50%;
   }
 }
+
+
+/* Added */
+.error {
+  border-color: red;
+}
+
+.error-message {
+  color: red;
+}

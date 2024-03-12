@@ -14,7 +14,8 @@ const app = Vue.createApp({
         confirmPassword: ''
       },
       showPassword: false,
-      showPasswordIcon: 'fa-eye'
+      showPasswordIcon: 'fa-eye',
+      passwordMatchError: false // Added data property for password match error
     };
   },
   methods: {
@@ -51,6 +52,13 @@ const app = Vue.createApp({
       }
     },
     async submitRegisterForm() {
+      // Check if passwords match
+      if (this.registerForm.password !== this.registerForm.confirmPassword) {
+        this.passwordMatchError = true; // Show password match error message
+        return; // Exit function
+      }
+
+      // If passwords match, proceed with registration
       try {
         const response = await fetch('http://localhost:8080/api/v1/profile', {
           method: 'POST',
