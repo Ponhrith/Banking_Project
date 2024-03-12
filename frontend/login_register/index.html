@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
   <title>Login & Register</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -14,8 +15,8 @@
           <form v-if="!signUpMode" class="sign-in-form">
             <h2 class="title">Login</h2>
             <div class="input-field">
-              <i class="fas fa-user"></i>
-              <input type="text" placeholder="Account Number" v-model="loginForm.accountNumber"/>
+              <i class="fas fa-envelope"></i>
+              <input type="text" placeholder="Email" v-model="loginForm.email"/>
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
