@@ -46,6 +46,9 @@ const app = Vue.createApp({
       // Check if email and password fields are empty
       if (!this.loginForm.email || !this.loginForm.password) {
         this.loginError = 'Fields cannot be empty!'; // Set login error message
+        setTimeout(() => {
+          this.loginError = '';
+        }, 3000);
         return;
       }
     
@@ -74,6 +77,9 @@ const app = Vue.createApp({
       // Check if passwords match
       if (this.registerForm.password !== this.registerForm.confirmPassword) {
         this.passwordMatchError = true; // Show password match error message
+        setTimeout(() => {
+          this.passwordMatchError = false;
+        }, 3000);
         return; // Exit function
       }
 
