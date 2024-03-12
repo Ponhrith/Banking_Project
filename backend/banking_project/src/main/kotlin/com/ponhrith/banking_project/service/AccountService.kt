@@ -9,6 +9,9 @@ import com.ponhrith.banking_project.repository.ProfileRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
+
 
 @Service
 class AccountService(
@@ -25,11 +28,14 @@ class AccountService(
             ResponseStatusException(HttpStatus.BAD_REQUEST, "User profile does not exist")
         }
 
-        // Create the account
+        // Generate account number based on account type
+        val accountNumber = generateAccountNumber(accountReq.type)
+
+        // Create the account with default balance of 0.00
         val account = Account(
             type = accountReq.type,
-            accountNumber = accountReq.number,
-            balance = accountReq.balance,
+            accountNumber = accountNumber,
+            balance = 0.00, // Default balance
             profile = profile
         )
 
@@ -47,5 +53,23 @@ class AccountService(
             number = savedAccount.accountNumber,
             balance = savedAccount.balance
         )
+    }
+
+    private fun generateAccountNumber(accountType: String): String {
+        // Define constants for account numbers
+        val savingsPrefix = "0000"
+        val jointPrefix = "1111"
+        val depositsPrefix = "2222"
+
+        // Generate random number suffix
+        val randomNumberSuffix = Random().nextInt(1000000000).toString().padStart(9, '0')
+
+        // Combine prefix and suffix based on account type
+        return when (accountType) {
+            "Savings" -> savingsPrefix + randomNumberSuffix
+            "Joint" -> jointPrefix + randomNumberSuffix
+            "Deposits" -> depositsPrefix + randomNumberSuffix
+            else -> throw IllegalArgumentException("Invalid account type")
+        }
     }
 }
