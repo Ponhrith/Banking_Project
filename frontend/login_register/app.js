@@ -20,6 +20,7 @@ const app = Vue.createApp({
       registerPasswordFieldType: 'password',
       registerConfirmPasswordFieldType: 'password',
       loginError: '',
+      registerError: '',
       loginSuccess: false,
     };
   },
@@ -81,12 +82,15 @@ const app = Vue.createApp({
     
     async submitRegisterForm() {
       // Check if passwords match
-      if (this.registerForm.password !== this.registerForm.confirmPassword) {
-        this.passwordMatchError = true; // Show password match error message
+      this.registerError = '';
+
+      // Check if any fields are empty
+      if (!this.registerForm.fullname || !this.registerForm.address || !this.registerForm.email || !this.registerForm.password || !this.registerForm.confirmPassword) {
+        this.registerError = 'Fields cannot be empty!'; // Set register error message
         setTimeout(() => {
-          this.passwordMatchError = false;
+          this.registerError = '';
         }, 3000);
-        return; // Exit function
+        return;
       }
 
       // If passwords match, proceed with registration
