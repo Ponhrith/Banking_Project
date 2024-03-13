@@ -1,6 +1,7 @@
 package com.ponhrith.banking_project.controller
 
 import com.ponhrith.banking_project.controller.request.RegisterReq
+import com.ponhrith.banking_project.controller.request.UpdateProfileReq
 import com.ponhrith.banking_project.controller.response.ListProfileRes
 import com.ponhrith.banking_project.controller.response.RegisterRes
 import com.ponhrith.banking_project.service.ProfileService
@@ -15,6 +16,10 @@ import org.springframework.web.bind.annotation.*
 class ProfileController(private val profileService: ProfileService) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
+    @PostMapping
+    fun registerProfile(@RequestBody registerReq: RegisterReq): RegisterRes {
+        return profileService.registerProfile(registerReq)
+    }
     @GetMapping
     fun listProfiles(): List<ListProfileRes> {
         return profileService.listProfiles()
@@ -30,9 +35,11 @@ class ProfileController(private val profileService: ProfileService) {
         }
     }
 
-    @PostMapping
-    fun registerProfile(@RequestBody registerReq: RegisterReq): RegisterRes {
-        return profileService.registerProfile(registerReq)
+    @PutMapping("/{profileId}")
+    fun updateProfile(@PathVariable profileId: Long, @RequestBody updateProfileReq: UpdateProfileReq)
+    : ResponseEntity<RegisterRes> {
+        val updatedProfile = profileService.updateProfile(profileId, updateProfileReq)
+        return ResponseEntity.ok(updatedProfile)
     }
 
     @DeleteMapping("/{profileId}")

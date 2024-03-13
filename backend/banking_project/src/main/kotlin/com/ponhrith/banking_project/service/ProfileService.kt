@@ -4,7 +4,7 @@ import com.ponhrith.banking_project.common.isValidEmail
 import com.ponhrith.banking_project.common.isValidFullName
 import com.ponhrith.banking_project.common.isValidPassword
 import com.ponhrith.banking_project.controller.request.RegisterReq
-import com.ponhrith.banking_project.controller.response.AccountRes
+import com.ponhrith.banking_project.controller.request.UpdateProfileReq
 import com.ponhrith.banking_project.controller.response.ListAccountRes
 import com.ponhrith.banking_project.controller.response.ListProfileRes
 import com.ponhrith.banking_project.controller.response.RegisterRes
@@ -109,6 +109,31 @@ class ProfileService(
         }
     }
 
+    fun updateProfile(profileId: Long, updateProfileReq: UpdateProfileReq): RegisterRes {
+        validateUpdateProfileRequest(updateProfileReq)
+        // Check if the profile exists
+        val profile = profileRepository.findById(profileId).orElse(null)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found")
+
+        // Update the profile fields
+        profile.apply {
+            address = updateProfileReq.address ?: address
+            email = updateProfileReq.email ?: email
+            password = updateProfileReq.password?.let { BCryptPasswordEncoder().encode(it) } ?: password
+        }
+
+        // Save the updated profile
+        val updatedProfile = profileRepository.save(profile)
+
+        return RegisterRes(
+            id = updatedProfile.id,
+            fullname = updatedProfile.fullname,
+            address = updatedProfile.address,
+            email = updatedProfile.email,
+            password = updatedProfile.password
+        )
+    }
+
     fun deleteProfile(profileId: Long) {
         val profile = profileRepository.findById(profileId).orElse(null)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found")
@@ -125,5 +150,10 @@ class ProfileService(
         registerReq.fullname.isValidFullName()
         registerReq.email.isValidEmail()
         registerReq.password.isValidPassword()
+    }
+
+    private fun validateUpdateProfileRequest(updateProfileReq: UpdateProfileReq) {
+        updateProfileReq.email.isValidEmail()
+        updateProfileReq.password.isValidPassword()
     }
 }
