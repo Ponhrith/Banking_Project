@@ -8,8 +8,11 @@ import com.ponhrith.banking_project.controller.response.RegisterRes
 import com.ponhrith.banking_project.model.Profile
 import com.ponhrith.banking_project.repository.ProfileRepository
 import org.slf4j.LoggerFactory
+import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 
 @Service
 class ProfileService(
@@ -19,6 +22,11 @@ class ProfileService(
 
     fun registerProfile(registerReq: RegisterReq): RegisterRes {
         validateRegisterRequest(registerReq)
+
+        // Check if email already exists
+        if (profileRepository.findByEmail(registerReq.email) != null) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists")
+        }
 
         val passwordEncoder = BCryptPasswordEncoder()
         val encryptedPassword = passwordEncoder.encode(registerReq.password) // Encrypting the password
@@ -31,19 +39,29 @@ class ProfileService(
             password = encryptedPassword // Assigning encrypted password to the profile
         )
 
-        // Save user
-        val savedProfile = profileRepository.save(profileEntity)
-        log.info("$savedProfile has been added")
+        try {
+            // Save user
+            val savedProfile = profileRepository.save(profileEntity)
+            log.info("$savedProfile has been added")
 
-        // Return user response
-        return RegisterRes(
-            id = savedProfile.id,
-            fullname = savedProfile.fullname,
-            address = savedProfile.address,
-            email = savedProfile.email,
-            password = savedProfile.password // Testing purpose
-        )
+            // Return user response
+            return RegisterRes(
+                id = savedProfile.id,
+                fullname = savedProfile.fullname,
+                address = savedProfile.address,
+                email = savedProfile.email,
+                password = savedProfile.password // Testing purpose
+            )
+        } catch (e: DataIntegrityViolationException) {
+            // Handle any database integrity violation exceptions
+            throw ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Error occurred while registering profile",
+                e
+            )
+        }
     }
+
     private fun validateRegisterRequest(registerReq: RegisterReq) {
         registerReq.fullname.isValidFullName()
         registerReq.email.isValidEmail()
