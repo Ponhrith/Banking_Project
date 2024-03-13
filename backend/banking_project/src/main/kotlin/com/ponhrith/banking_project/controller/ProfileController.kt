@@ -1,6 +1,7 @@
 package com.ponhrith.banking_project.controller
 
 import com.ponhrith.banking_project.controller.request.RegisterReq
+import com.ponhrith.banking_project.controller.response.ListProfileRes
 import com.ponhrith.banking_project.controller.response.RegisterRes
 import com.ponhrith.banking_project.service.ProfileService
 import org.slf4j.LoggerFactory
@@ -11,6 +12,11 @@ import org.springframework.web.bind.annotation.*
 @CrossOrigin("http://127.0.0.1:5500")
 class ProfileController(private val profileService: ProfileService) {
     private val log = LoggerFactory.getLogger(this::class.java)
+
+    @GetMapping
+    fun listProfiles(): List<ListProfileRes> {
+        return profileService.listProfiles()
+    }
 
     @PostMapping
     fun registerProfile(@RequestBody registerReq: RegisterReq): RegisterRes {

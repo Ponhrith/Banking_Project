@@ -5,5 +5,5 @@ data class ListProfileRes(
     val fullname: String,
     val address: String,
     val email: String,
-    val accounts: List<AccountRes>
+    val accounts: List<ListAccountRes>
 )

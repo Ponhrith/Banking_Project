@@ -5,9 +5,11 @@ import com.ponhrith.banking_project.common.isValidFullName
 import com.ponhrith.banking_project.common.isValidPassword
 import com.ponhrith.banking_project.controller.request.RegisterReq
 import com.ponhrith.banking_project.controller.response.AccountRes
+import com.ponhrith.banking_project.controller.response.ListAccountRes
 import com.ponhrith.banking_project.controller.response.ListProfileRes
 import com.ponhrith.banking_project.controller.response.RegisterRes
 import com.ponhrith.banking_project.model.Profile
+import com.ponhrith.banking_project.repository.AccountRepository
 import com.ponhrith.banking_project.repository.ProfileRepository
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
@@ -19,7 +21,7 @@ import org.springframework.web.server.ResponseStatusException
 @Service
 class ProfileService(
     private val profileRepository: ProfileRepository,
-    private val accountRepository: ProfileRepository
+    private val accountRepository: AccountRepository
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -34,7 +36,7 @@ class ProfileService(
                 address = profile.address,
                 email = profile.email,
                 accounts = accounts.map { account ->
-                    AccountRes(
+                    ListAccountRes(
                         id = account.id,
                         type = account.type,
                         number = account.accountNumber,
