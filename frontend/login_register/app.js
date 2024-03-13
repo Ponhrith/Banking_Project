@@ -8,7 +8,7 @@ const app = Vue.createApp({
       },
       registerForm: {
         fullname: "",
-        address: "",
+        address: "", 
         email: "",
         password: "",
         confirmPassword: "",
@@ -89,6 +89,7 @@ const app = Vue.createApp({
         if (response.ok) {
           this.loginSuccess = true; // Set login success to true
           this.loginForm = { email: '', password: '' }; // Reset login form
+          window.location.href = "/dashboard/dashboard.html";
           setTimeout(() => {
             this.loginSuccess = false; // Reset login success after 3 seconds
           }, 3000);
@@ -195,6 +196,7 @@ const app = Vue.createApp({
               password: '',
               confirmPassword: ''
             };
+            window.location.href = "/dashboard/dashboard.html"; // Navigate to another page
             setTimeout(() => {
               this.registerSuccess = false; // Reset register success after 3 seconds
             }, 3000);
