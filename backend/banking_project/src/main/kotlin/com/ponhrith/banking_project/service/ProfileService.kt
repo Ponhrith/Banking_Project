@@ -109,6 +109,14 @@ class ProfileService(
         }
     }
 
+    fun deleteProfile(profileId: Long) {
+        val profile = profileRepository.findById(profileId).orElse(null)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found")
+        accountRepository.deleteByProfileId(profileId)
+        profileRepository.delete(profile)
+        log.info("Profile with ID $profileId has been deleted")
+    }
+
     fun checkEmailExists(email: String): Boolean {
         return profileRepository.findByEmail(email) != null
     }

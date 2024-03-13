@@ -5,6 +5,7 @@ import com.ponhrith.banking_project.controller.response.ListProfileRes
 import com.ponhrith.banking_project.controller.response.RegisterRes
 import com.ponhrith.banking_project.service.ProfileService
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -32,6 +33,18 @@ class ProfileController(private val profileService: ProfileService) {
     @PostMapping
     fun registerProfile(@RequestBody registerReq: RegisterReq): RegisterRes {
         return profileService.registerProfile(registerReq)
+    }
+
+    @DeleteMapping("/{profileId}")
+    fun deleteProfile(@PathVariable profileId: Long): ResponseEntity<String> {
+        try {
+            profileService.deleteProfile(profileId)
+            return ResponseEntity.ok("Profile with ID $profileId has been deleted")
+        } catch (ex: NoSuchElementException) {
+            return ResponseEntity.notFound().build()
+        } catch (ex: Exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete profile")
+        }
     }
 
     @GetMapping("/check-email")

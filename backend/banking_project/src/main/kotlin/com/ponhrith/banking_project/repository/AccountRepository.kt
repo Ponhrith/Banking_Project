@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface AccountRepository : JpaRepository<Account, Long> {
     fun findByProfileId(profileId: Long): List<Account>
-
+    fun deleteByProfileId(profileId: Long)
 }
