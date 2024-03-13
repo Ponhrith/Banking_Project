@@ -159,41 +159,48 @@ const app = Vue.createApp({
 
       // If passwords match, proceed with registration
       try {
-        const response = await fetch(
+        const emailCheckResponse = await fetch(
           `http://localhost:8080/api/v1/profile/check-email?email=${encodeURIComponent(
             this.registerForm.email
           )}`
         );
-        const emailExists = await response.json();
-        if (emailExists) {
-          this.registerError = "Email already exists";
-          return;
-        }
-
-        // Proceed with registration if email does not exist
-        const registerResponse = await fetch(
-          "http://localhost:8080/api/v1/profile",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(this.registerForm),
+        if (emailCheckResponse.ok) {
+          const emailExists = await emailCheckResponse.json();
+          if (emailExists) {
+            this.registerError = "Email already exists";
+            setTimeout(() => {
+              this.registerError = "";
+            }, 3000);
+            return;
           }
-        );
-        const registerData = await registerResponse.json();
-        if (registerResponse.ok) {
-          this.registerSuccess = true; // Set register success to true
-          setTimeout(() => {
-            this.registerSuccess = false; // Reset register success after 3 seconds
-          }, 3000);
+          // Proceed with registration if email does not exist
+          const registerResponse = await fetch(
+            "http://localhost:8080/api/v1/profile",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(this.registerForm),
+            }
+          );
+          const registerData = await registerResponse.json();
+          if (registerResponse.ok) {
+            this.registerSuccess = true; // Set register success to true
+            setTimeout(() => {
+              this.registerSuccess = false; // Reset register success after 3 seconds
+            }, 3000);
+          } else {
+            alert("Registration failed: " + registerData.message); // Show error message
+          }
         } else {
-          alert("Registration failed: " + registerData.message); // Show error message
+          alert("Failed to check email existence"); // Show error message
         }
       } catch (error) {
         console.error("Error:", error);
         alert("An error occurred while registering."); // Show generic error message
       }
+      
     },
   },
 });
