@@ -89,10 +89,10 @@ const app = Vue.createApp({
         if (response.ok) {
           this.loginSuccess = true; // Set login success to true
           this.loginForm = { email: '', password: '' }; // Reset login form
-          window.location.href = "/dashboard/dashboard.html";
           setTimeout(() => {
             this.loginSuccess = false; // Reset login success after 3 seconds
-          }, 3000);
+            window.location.href = "/dashboard/dashboard.html"; // Navigate to another page after 3 seconds
+          }, 2000);
         } else {
           this.loginError = "Invalid email or password!"; // Set login error message
           setTimeout(() => {
@@ -196,10 +196,10 @@ const app = Vue.createApp({
               password: '',
               confirmPassword: ''
             };
-            window.location.href = "/dashboard/dashboard.html"; // Navigate to another page
             setTimeout(() => {
               this.registerSuccess = false; // Reset register success after 3 seconds
-            }, 3000);
+              window.location.href = "/dashboard/dashboard.html"; // Navigate to another page after 3 seconds
+            }, 2000);
           } else {
             alert("Registration failed: " + registerData.message); // Show error message
           }
