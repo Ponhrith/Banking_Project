@@ -47,6 +47,26 @@ class ProfileService(
         }
     }
 
+    fun showProfile(profileId: Long): ListProfileRes? {
+        val profile = profileRepository.findById(profileId).orElse(null) ?: return null
+        val accounts = accountRepository.findByProfileId(profile.id)
+
+        return ListProfileRes(
+            id = profile.id,
+            fullname = profile.fullname,
+            address = profile.address,
+            email = profile.email,
+            accounts = accounts.map { account ->
+                ListAccountRes(
+                    id = account.id,
+                    type = account.type,
+                    number = account.accountNumber,
+                    balance = account.balance
+                )
+            }
+        )
+    }
+
     fun registerProfile(registerReq: RegisterReq): RegisterRes {
         validateRegisterRequest(registerReq)
 

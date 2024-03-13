@@ -5,6 +5,7 @@ import com.ponhrith.banking_project.controller.response.ListProfileRes
 import com.ponhrith.banking_project.controller.response.RegisterRes
 import com.ponhrith.banking_project.service.ProfileService
 import org.slf4j.LoggerFactory
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -16,6 +17,16 @@ class ProfileController(private val profileService: ProfileService) {
     @GetMapping
     fun listProfiles(): List<ListProfileRes> {
         return profileService.listProfiles()
+    }
+
+    @GetMapping("/{profileId}")
+    fun showProfile(@PathVariable profileId: Long): ResponseEntity<ListProfileRes> {
+        val profile = profileService.showProfile(profileId)
+        return if (profile != null) {
+            ResponseEntity.ok(profile)
+        } else {
+            ResponseEntity.notFound().build()
+        }
     }
 
     @PostMapping
