@@ -40,6 +40,11 @@ const app = Vue.createApp({
         this.registerConfirmPasswordFieldType = this.showRegisterConfirmPassword ? 'text' : 'password';
       }
     },
+
+    isValidEmail(email) {
+      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return regex.test(email);
+    },
     
     async submitLoginForm() {
       // Reset login error message
@@ -50,6 +55,14 @@ const app = Vue.createApp({
         this.loginError = 'Fields cannot be empty!'; // Set login error message
         setTimeout(() => {
           this.loginError = '';
+        }, 3000);
+        return;
+      }
+
+      if (!this.isValidEmail(this.registerForm.email)) {
+        this.registerError = 'Invalid email address'; // Set register error message
+        setTimeout(() => {
+          this.registerError = '';
         }, 3000);
         return;
       }
