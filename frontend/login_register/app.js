@@ -55,6 +55,10 @@ const app = Vue.createApp({
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
       return regex.test(password);
     },
+    isValidFullName(fullname) {
+      const regex = /^[a-zA-Z]+[\s][a-zA-Z]+$/;
+      return regex.test(fullname);
+    },
 
     async submitLoginForm() {
       // Reset login error message
@@ -119,6 +123,15 @@ const app = Vue.createApp({
 
       if (this.registerForm.password !== this.registerForm.confirmPassword) {
         this.registerError = "Passwords do not match!"; // Set register error message
+        setTimeout(() => {
+          this.registerError = "";
+        }, 3000);
+        return;
+      }
+
+      // Check if full name is valid
+      if (!this.isValidFullName(this.registerForm.fullname)) {
+        this.registerError = "Invalid full name format!"; // Set register error message
         setTimeout(() => {
           this.registerError = "";
         }, 3000);
