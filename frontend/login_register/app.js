@@ -40,10 +40,13 @@ const app = Vue.createApp({
         this.registerConfirmPasswordFieldType = this.showRegisterConfirmPassword ? 'text' : 'password';
       }
     },
-
     isValidEmail(email) {
       const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       return regex.test(email);
+    },
+    isValidPassword(password) {
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      return regex.test(password);
     },
     
     async submitLoginForm() {
@@ -59,8 +62,18 @@ const app = Vue.createApp({
         return;
       }
 
+      // Check if email is valid
       if (!this.isValidEmail(this.registerForm.email)) {
         this.registerError = 'Invalid email address'; // Set register error message
+        setTimeout(() => {
+          this.registerError = '';
+        }, 3000);
+        return;
+      }
+
+      // Check if password is valid
+      if (!this.isValidPassword(this.registerForm.password)) {
+        this.registerError = 'Invalid password format!'; // Set register error message
         setTimeout(() => {
           this.registerError = '';
         }, 3000);
