@@ -62,6 +62,10 @@ class ProfileService(
         }
     }
 
+    fun checkEmailExists(email: String): Boolean {
+        return profileRepository.findByEmail(email) != null
+    }
+
     private fun validateRegisterRequest(registerReq: RegisterReq) {
         registerReq.fullname.isValidFullName()
         registerReq.email.isValidEmail()

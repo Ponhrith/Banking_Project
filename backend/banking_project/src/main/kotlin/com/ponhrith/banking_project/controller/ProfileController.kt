@@ -16,4 +16,9 @@ class ProfileController(private val profileService: ProfileService) {
     fun registerProfile(@RequestBody registerReq: RegisterReq): RegisterRes {
         return profileService.registerProfile(registerReq)
     }
+
+    @GetMapping("/check-email")
+    fun checkEmailExists(@RequestParam email: String): Boolean {
+        return profileService.checkEmailExists(email)
+    }
 }
