@@ -4,6 +4,8 @@ import com.ponhrith.banking_project.common.isValidEmail
 import com.ponhrith.banking_project.common.isValidFullName
 import com.ponhrith.banking_project.common.isValidPassword
 import com.ponhrith.banking_project.controller.request.RegisterReq
+import com.ponhrith.banking_project.controller.response.AccountRes
+import com.ponhrith.banking_project.controller.response.ListProfileRes
 import com.ponhrith.banking_project.controller.response.RegisterRes
 import com.ponhrith.banking_project.model.Profile
 import com.ponhrith.banking_project.repository.ProfileRepository
@@ -17,8 +19,31 @@ import org.springframework.web.server.ResponseStatusException
 @Service
 class ProfileService(
     private val profileRepository: ProfileRepository,
+    private val accountRepository: ProfileRepository
 ) {
     private val log = LoggerFactory.getLogger(this::class.java)
+
+
+    fun listProfiles(): List<ListProfileRes> {
+        val profiles = profileRepository.findAll()
+        return profiles.map { profile ->
+            val accounts = accountRepository.findByProfileId(profile.id)
+            ListProfileRes(
+                id = profile.id,
+                fullname = profile.fullname,
+                address = profile.address,
+                email = profile.email,
+                accounts = accounts.map { account ->
+                    AccountRes(
+                        id = account.id,
+                        type = account.type,
+                        number = account.accountNumber,
+                        balance = account.balance
+                    )
+                }
+            )
+        }
+    }
 
     fun registerProfile(registerReq: RegisterReq): RegisterRes {
         validateRegisterRequest(registerReq)
