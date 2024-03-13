@@ -61,24 +61,6 @@ const app = Vue.createApp({
         }, 3000);
         return;
       }
-
-      // Check if email is valid
-      if (!this.isValidEmail(this.registerForm.email)) {
-        this.registerError = 'Invalid email address'; // Set register error message
-        setTimeout(() => {
-          this.registerError = '';
-        }, 3000);
-        return;
-      }
-
-      // Check if password is valid
-      if (!this.isValidPassword(this.registerForm.password)) {
-        this.registerError = 'Invalid password format!'; // Set register error message
-        setTimeout(() => {
-          this.registerError = '';
-        }, 3000);
-        return;
-      }
     
       try {
         const response = await fetch('http://localhost:8080/api/v1/auth/login', {
@@ -126,6 +108,24 @@ const app = Vue.createApp({
         }, 3000);
         return;
       }
+
+            // Check if email is valid
+            if (!this.isValidEmail(this.registerForm.email)) {
+              this.registerError = 'Invalid email address'; // Set register error message
+              setTimeout(() => {
+                this.registerError = '';
+              }, 3000);
+              return;
+            }
+      
+            // Check if password is valid
+            if (!this.isValidPassword(this.registerForm.password)) {
+              this.registerError = 'Invalid password format!'; // Set register error message
+              setTimeout(() => {
+                this.registerError = '';
+              }, 3000);
+              return;
+            }
 
       // If passwords match, proceed with registration
       try {
