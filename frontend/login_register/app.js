@@ -158,19 +158,34 @@ const app = Vue.createApp({
 
       // If passwords match, proceed with registration
       try {
-        const response = await fetch("http://localhost:8080/api/v1/profile", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(this.registerForm),
-        });
-        const data = await response.json();
-        if (response.ok) {
+        const response = await fetch(
+          `http://localhost:8080/api/v1/profile/check-email?email=${encodeURIComponent(
+            this.registerForm.email
+          )}`
+        );
+        const emailExists = await response.json();
+        if (emailExists) {
+          this.registerError = "Email already exists";
+          return;
+        }
+
+        // Proceed with registration if email does not exist
+        const registerResponse = await fetch(
+          "http://localhost:8080/api/v1/profile",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(this.registerForm),
+          }
+        );
+        const registerData = await registerResponse.json();
+        if (registerResponse.ok) {
           alert("Registration successful!"); // Show success message
           // Optionally, you can redirect the user to another page
         } else {
-          alert("Registration failed: " + data.message); // Show error message
+          alert("Registration failed: " + registerData.message); // Show error message
         }
       } catch (error) {
         console.error("Error:", error);
