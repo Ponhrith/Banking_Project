@@ -1,5 +1,6 @@
 package com.ponhrith.banking_project.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 
@@ -17,6 +18,7 @@ data class Account(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id") // Foreign key referencing Profile
+    @JsonIgnore
     var profile: Profile? = null
 )
 

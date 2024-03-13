@@ -8,6 +8,7 @@ import com.ponhrith.banking_project.repository.AccountRepository
 import com.ponhrith.banking_project.repository.ProfileRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -18,6 +19,8 @@ class AccountService(
     private val accountRepository: AccountRepository,
     private val profileRepository: ProfileRepository
 ) {
+
+    @Transactional
     fun createAccount(accountReq: AccountReq): AccountRes {
         // Check if the account type is valid
         accountReq.type.isValidAccountType()
