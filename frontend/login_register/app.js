@@ -22,6 +22,7 @@ const app = Vue.createApp({
       loginError: "",
       registerError: "",
       loginSuccess: false,
+      registerSuccess: false,
     };
   },
   methods: {
@@ -182,8 +183,10 @@ const app = Vue.createApp({
         );
         const registerData = await registerResponse.json();
         if (registerResponse.ok) {
-          alert("Registration successful!"); // Show success message
-          // Optionally, you can redirect the user to another page
+          this.registerSuccess = true; // Set register success to true
+          setTimeout(() => {
+            this.registerSuccess = false; // Reset register success after 3 seconds
+          }, 3000);
         } else {
           alert("Registration failed: " + registerData.message); // Show error message
         }

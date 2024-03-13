@@ -21,6 +21,13 @@
       >
         <i class="fas fa-check-circle"></i> Login successful!
       </div>
+      <div
+        class="alert alert-success text-center"
+        role="alert"
+        v-if="registerSuccess"
+      >
+        <i class="fas fa-check-circle"></i> Registration successful!
+      </div>
       <div class="custom-container" :class="{ 'sign-up-mode': signUpMode }">
         <div class="custom-forms-container">
           <div class="signin-signup">
