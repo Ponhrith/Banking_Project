@@ -88,6 +88,7 @@ const app = Vue.createApp({
 
         if (response.ok) {
           this.loginSuccess = true; // Set login success to true
+          this.loginForm = { email: '', password: '' }; // Reset login form
           setTimeout(() => {
             this.loginSuccess = false; // Reset login success after 3 seconds
           }, 3000);
@@ -187,6 +188,13 @@ const app = Vue.createApp({
           const registerData = await registerResponse.json();
           if (registerResponse.ok) {
             this.registerSuccess = true; // Set register success to true
+            this.registerForm = { // Clear the form
+              fullname: '',
+              address: '',
+              email: '',
+              password: '',
+              confirmPassword: ''
+            };
             setTimeout(() => {
               this.registerSuccess = false; // Reset register success after 3 seconds
             }, 3000);
