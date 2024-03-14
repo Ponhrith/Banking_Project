@@ -42,7 +42,7 @@
                 <i class="fas fa-envelope"></i>
                 <input
                   type="text"
-                  placeholder="Email"
+                  placeholder="Email *"
                   v-model="loginForm.email"
                 />
               </div>
@@ -50,7 +50,7 @@
                 <i class="fas fa-lock"></i>
                 <input
                   :type="loginPasswordFieldType"
-                  placeholder="Password"
+                  placeholder="Password *"
                   v-model="loginForm.password"
                 />
                 <span
@@ -73,7 +73,7 @@
                 <i class="fas fa-user"></i>
                 <input
                   type="text"
-                  placeholder="Full Name"
+                  placeholder="Full Name *"
                   v-model="registerForm.fullname"
                 />
               </div>
@@ -81,7 +81,7 @@
                 <i class="fas fa-address-book"></i>
                 <input
                   type="text"
-                  placeholder="Address"
+                  placeholder="Address *"
                   v-model="registerForm.address"
                 />
               </div>
@@ -89,7 +89,7 @@
                 <i class="fas fa-envelope"></i>
                 <input
                   type="email"
-                  placeholder="Email"
+                  placeholder="Email *"
                   v-model="registerForm.email"
                 />
               </div>
@@ -97,7 +97,7 @@
                 <i class="fas fa-lock"></i>
                 <input
                   :type="registerPasswordFieldType"
-                  placeholder="Password"
+                  placeholder="Password *"
                   v-model="registerForm.password"
                 />
                 <span
@@ -116,7 +116,7 @@
                 <i class="fas fa-lock"></i>
                 <input
                   :type="registerConfirmPasswordFieldType"
-                  placeholder="Confirm Password"
+                  placeholder="Confirm Password *"
                   v-model="registerForm.confirmPassword"
                 />
                 <span
