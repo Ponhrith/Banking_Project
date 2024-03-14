@@ -5,5 +5,6 @@ import com.ponhrith.banking_project.model.Profile
 data class LoginRes(
     val success: Boolean,
     val message: String,
-    val profile: Profile? = null
+    val profile: Profile? = null,
+    val token: String? = null
 )
