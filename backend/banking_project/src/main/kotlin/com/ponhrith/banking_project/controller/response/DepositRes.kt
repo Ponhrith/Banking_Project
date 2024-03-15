@@ -7,6 +7,6 @@ data class DepositRes(
     val id: Long,
     var amount: Double,
     var date: LocalDateTime,
-    var type: String,
-    var account: Account? = null,
+    val type: String = "Deposit",
+    var account: Account? = null
 )

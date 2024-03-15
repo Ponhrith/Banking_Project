@@ -14,14 +14,12 @@ import java.time.LocalDateTime
 
 @Service
 class TransactionService(
-    private val transactionRepository: TransactionRepository,
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
+    private val transactionRepository: TransactionRepository
 ) {
+
     @Transactional
     fun depositMoney(depositReq: DepositReq): DepositRes {
-        // Validate the transaction type
-        depositReq.type.isValidTransactionType()
-
         // Check if the source account exists
         val sourceAccount = accountRepository.findByAccountNumber(depositReq.sourceAccount)
             ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Source account not found")
@@ -36,7 +34,7 @@ class TransactionService(
         val transaction = Transaction(
             date = LocalDateTime.now(),
             amount = depositReq.amount,
-            type = depositReq.type,
+            type = "Deposit",
             targetAccount = sourceAccount,
             sourceAccount = sourceAccount // For deposit, target account is the same as the source account
         )
@@ -49,7 +47,6 @@ class TransactionService(
             id = savedTransaction.id,
             amount = savedTransaction.amount,
             date = savedTransaction.date,
-            type = savedTransaction.type,
             account = updatedAccount // Return the updated account object with the response
         )
 
