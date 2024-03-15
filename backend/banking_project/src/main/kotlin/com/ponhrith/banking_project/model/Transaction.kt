@@ -1,8 +1,7 @@
 package com.ponhrith.banking_project.model
 
 import javax.persistence.*
-import java.time.LocalDate
-
+import java.time.LocalDateTime
 
 
 @Entity
@@ -11,7 +10,7 @@ data class Transaction(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     @Column(name = "date")
-    var date: LocalDate,
+    var date: LocalDateTime,
     @Column(name = "amount")
     var amount: Double,
     @Column(name = "type")

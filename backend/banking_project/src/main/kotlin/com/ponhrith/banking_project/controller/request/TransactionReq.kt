@@ -8,5 +8,4 @@ data class TransactionReq(
     val type: String,
     var targetAccount: Long,
     var amount: Double,
-    var date: LocalDate
 )

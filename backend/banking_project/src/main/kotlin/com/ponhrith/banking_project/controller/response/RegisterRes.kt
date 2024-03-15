@@ -5,7 +5,6 @@ data class RegisterRes(
     val fullname: String,
     val address: String,
     val email: String? = null,
-//    var account: AccountRes? = null,
     val password: String? = null,
 
 )
