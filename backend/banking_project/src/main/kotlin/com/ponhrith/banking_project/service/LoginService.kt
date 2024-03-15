@@ -2,7 +2,6 @@ package com.ponhrith.banking_project.service
 
 import com.ponhrith.banking_project.controller.request.LoginReq
 import com.ponhrith.banking_project.controller.response.LoginRes
-import com.ponhrith.banking_project.model.Profile
 import com.ponhrith.banking_project.repository.ProfileRepository
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
