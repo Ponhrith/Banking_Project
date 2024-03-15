@@ -5,7 +5,9 @@ import com.ponhrith.banking_project.controller.request.AccountReq
 import com.ponhrith.banking_project.controller.response.AccountRes
 import com.ponhrith.banking_project.service.AccountService
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 
 
 @RestController
@@ -16,6 +18,16 @@ class AccountController(private val accountService: AccountService) {
     @PostMapping
     fun createAccount(@RequestBody accountReq: AccountReq): AccountRes {
         return accountService.createAccount(accountReq)
+    }
+
+    @DeleteMapping("/{accountId}")
+    fun deleteAccount(@PathVariable accountId: Long): ResponseEntity<String> {
+        try {
+            accountService.deleteAccount(accountId)
+            return ResponseEntity.ok("Account with ID $accountId has been deleted")
+        } catch (ex: NoSuchElementException) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found", ex)
+        }
     }
 
 }

@@ -6,6 +6,7 @@ import com.ponhrith.banking_project.controller.response.AccountRes
 import com.ponhrith.banking_project.model.Account
 import com.ponhrith.banking_project.repository.AccountRepository
 import com.ponhrith.banking_project.repository.ProfileRepository
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,6 +19,9 @@ class AccountService(
     private val accountRepository: AccountRepository,
     private val profileRepository: ProfileRepository
 ) {
+
+    private val log = LoggerFactory.getLogger(this::class.java)
+
     @Transactional
     fun createAccount(accountReq: AccountReq): AccountRes {
         // Check if the account type is valid
@@ -54,6 +58,28 @@ class AccountService(
             number = savedAccount.accountNumber,
             balance = savedAccount.balance
         )
+    }
+
+    @Transactional
+    fun deleteAccount(accountId: Long) {
+        // Check if the account exists
+        val accountOptional = accountRepository.findById(accountId)
+        val account = accountOptional.orElseThrow {
+            ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found")
+        }
+
+        // Delete the account
+        accountRepository.delete(account)
+
+        // Optional: Remove the account from the associated profile's account list
+        val profile = account.profile
+        profile?.let {
+            it.account.removeIf { acc -> acc.id == accountId }
+            profileRepository.save(it)
+        }
+
+        // Log the deletion
+        log.info("Account with ID $accountId has been deleted")
     }
 
     private fun generateAccountNumber(accountType: String): String {
