@@ -1,12 +1,10 @@
 package com.ponhrith.banking_project.controller.response
 
-import com.ponhrith.banking_project.model.Profile
-
-data class AccountRes(
+data class ListProfAccRes(
     val id: Long,
-    val profile: Profile? = null,
     var type: String,
     var number: String,
     var balance: Double,
     var currency: String,
 )
+

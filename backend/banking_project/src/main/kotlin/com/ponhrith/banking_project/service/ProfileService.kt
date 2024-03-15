@@ -5,7 +5,7 @@ import com.ponhrith.banking_project.common.isValidFullName
 import com.ponhrith.banking_project.common.isValidPassword
 import com.ponhrith.banking_project.controller.request.RegisterReq
 import com.ponhrith.banking_project.controller.request.UpdateProfileReq
-import com.ponhrith.banking_project.controller.response.ListAccountRes
+import com.ponhrith.banking_project.controller.response.ListProfAccRes
 import com.ponhrith.banking_project.controller.response.ListProfileRes
 import com.ponhrith.banking_project.controller.response.RegisterRes
 import com.ponhrith.banking_project.model.Profile
@@ -36,7 +36,7 @@ class ProfileService(
                 address = profile.address,
                 email = profile.email,
                 accounts = accounts.map { account ->
-                    ListAccountRes(
+                    ListProfAccRes(
                         id = account.id,
                         type = account.type,
                         number = account.accountNumber,
@@ -58,7 +58,7 @@ class ProfileService(
             address = profile.address,
             email = profile.email,
             accounts = accounts.map { account ->
-                ListAccountRes(
+                ListProfAccRes(
                     id = account.id,
                     type = account.type,
                     number = account.accountNumber,

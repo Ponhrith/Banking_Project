@@ -1,6 +1,6 @@
 package com.ponhrith.banking_project.controller.response
 
-import java.util.Currency
+import com.ponhrith.banking_project.model.Profile
 
 data class ListAccountRes(
     val id: Long,
@@ -8,5 +8,5 @@ data class ListAccountRes(
     var number: String,
     var balance: Double,
     var currency: String,
+    val profiles: List<ListAccProfRes>
 )
-

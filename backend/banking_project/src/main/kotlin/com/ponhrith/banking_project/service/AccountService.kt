@@ -4,7 +4,10 @@ import com.ponhrith.banking_project.common.isValidAccountType
 import com.ponhrith.banking_project.common.isValidCurrencyType
 import com.ponhrith.banking_project.controller.request.AccountReq
 import com.ponhrith.banking_project.controller.response.AccountRes
+import com.ponhrith.banking_project.controller.response.ListAccProfRes
+import com.ponhrith.banking_project.controller.response.ListAccountRes
 import com.ponhrith.banking_project.model.Account
+import com.ponhrith.banking_project.model.Profile
 import com.ponhrith.banking_project.repository.AccountRepository
 import com.ponhrith.banking_project.repository.ProfileRepository
 import org.slf4j.LoggerFactory
@@ -22,6 +25,28 @@ class AccountService(
 ) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
+
+    fun listAccounts(): List<ListAccountRes> {
+        val accounts = accountRepository.findAll() // Fetch all accounts
+
+        return accounts.map { account ->
+            ListAccountRes(
+                id = account.id,
+                type = account.type,
+                number = account.accountNumber,
+                balance = account.balance,
+                currency = account.currency,
+                profiles = account.profile?.let { listOf(
+                    ListAccProfRes(
+                        id = it.id,
+                        fullname = it.fullname,
+                        address = it.address,
+                        email = it.email
+                    )
+                ) } ?: emptyList()
+            )
+        }
+    }
 
     @Transactional
     fun createAccount(accountReq: AccountReq): AccountRes {

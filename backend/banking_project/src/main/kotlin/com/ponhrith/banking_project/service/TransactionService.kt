@@ -1,6 +1,5 @@
 package com.ponhrith.banking_project.service
 
-import com.ponhrith.banking_project.common.isValidTransactionType
 import com.ponhrith.banking_project.controller.request.DepositReq
 import com.ponhrith.banking_project.controller.request.TransferReq
 import com.ponhrith.banking_project.controller.response.DepositRes
