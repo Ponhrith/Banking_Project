@@ -48,6 +48,48 @@ class AccountService(
         }
     }
 
+    fun getAccountByAccountNumber(accountNumber: String): ListAccountRes? {
+        val account = accountRepository.findByAccountNumber(accountNumber)
+        return account?.let {
+            ListAccountRes(
+                id = it.id,
+                type = it.type,
+                number = it.accountNumber,
+                balance = it.balance,
+                currency = it.currency,
+                profiles = it.profile?.let { profile ->
+                    listOf(ListAccProfRes(
+                        id = profile.id,
+                        fullname = profile.fullname,
+                        address = profile.address,
+                        email = profile.email
+                    ))
+                } ?: emptyList()
+            )
+        }
+    }
+
+    fun getAccountById(accountId: Long): ListAccountRes? {
+        val account = accountRepository.findById(accountId).orElse(null)
+        return account?.let {
+            ListAccountRes(
+                id = it.id,
+                type = it.type,
+                number = it.accountNumber,
+                balance = it.balance,
+                currency = it.currency,
+                profiles = it.profile?.let { profile ->
+                    listOf(ListAccProfRes(
+                        id = profile.id,
+                        fullname = profile.fullname,
+                        address = profile.address,
+                        email = profile.email
+                    ))
+                } ?: emptyList()
+            )
+        }
+    }
+
     @Transactional
     fun createAccount(accountReq: AccountReq): AccountRes {
         // Check if the field type is valid
@@ -87,27 +129,6 @@ class AccountService(
             balance = savedAccount.balance,
             currency = savedAccount.currency
         )
-    }
-
-    fun getAccountByAccountNumber(accountNumber: String): ListAccountRes? {
-        val account = accountRepository.findByAccountNumber(accountNumber)
-        return account?.let {
-            ListAccountRes(
-                id = it.id,
-                type = it.type,
-                number = it.accountNumber,
-                balance = it.balance,
-                currency = it.currency,
-                profiles = it.profile?.let { profile ->
-                    listOf(ListAccProfRes(
-                        id = profile.id,
-                        fullname = profile.fullname,
-                        address = profile.address,
-                        email = profile.email
-                    ))
-                } ?: emptyList()
-            )
-        }
     }
 
     @Transactional

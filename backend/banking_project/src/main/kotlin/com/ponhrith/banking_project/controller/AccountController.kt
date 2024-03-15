@@ -20,9 +20,13 @@ class AccountController(private val accountService: AccountService) {
     fun listAccounts(): List<ListAccountRes> {
         return accountService.listAccounts()
     }
-    @GetMapping("/{accountNumber}")
+    @GetMapping("/accountNumber/{accountNumber}")
     fun getAccountByAccountNumber(@PathVariable accountNumber: String): ListAccountRes? {
         return accountService.getAccountByAccountNumber(accountNumber)
+    }
+    @GetMapping("/id/{accountId}")
+    fun getAccountById(@PathVariable accountId: Long): ListAccountRes? {
+        return accountService.getAccountById(accountId)
     }
     @PostMapping
     fun createAccount(@RequestBody accountReq: AccountReq): AccountRes {

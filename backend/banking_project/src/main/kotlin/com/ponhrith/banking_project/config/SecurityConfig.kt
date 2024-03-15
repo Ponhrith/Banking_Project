@@ -39,7 +39,7 @@ class SecurityConfig(
                 "/api/v1/profile",
                 "/api/v1/profile/*",
                 "/api/v1/account",
-                "/api/v1/account/*",
+                "/api/v1/account/**",
                 "/api/v1/transaction/*",
                 "/api/v1/auth/*").permitAll() // Permit access to these endpoints without authentication
             .anyRequest().authenticated().and()
