@@ -2,7 +2,9 @@ package com.ponhrith.banking_project.service
 
 import com.ponhrith.banking_project.common.isValidTransactionType
 import com.ponhrith.banking_project.controller.request.DepositReq
+import com.ponhrith.banking_project.controller.request.TransferReq
 import com.ponhrith.banking_project.controller.response.DepositRes
+import com.ponhrith.banking_project.controller.response.TransferRes
 import com.ponhrith.banking_project.model.Transaction
 import com.ponhrith.banking_project.repository.AccountRepository
 import com.ponhrith.banking_project.repository.TransactionRepository
@@ -51,5 +53,62 @@ class TransactionService(
         )
 
         return depositRes
+    }
+
+    @Transactional
+    fun transferMoney(transferReq: TransferReq): TransferRes {
+        // Check if the source account exists
+        val sourceAccount = accountRepository.findByAccountNumber(transferReq.sourceAccount)
+            ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Source account not found")
+
+        // Check if the target account exists
+        val targetAccount = accountRepository.findByAccountNumber(transferReq.targetAccount)
+            ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Target account not found")
+
+        // Check if the source account has sufficient balance
+        if (sourceAccount.balance < transferReq.amount) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient balance in the source account")
+        }
+
+        // Update the balances of source and target accounts
+        sourceAccount.balance -= transferReq.amount
+        targetAccount.balance += transferReq.amount
+
+        // Save the updated source and target accounts
+        val updatedSourceAccount = accountRepository.save(sourceAccount)
+        val updatedTargetAccount = accountRepository.save(targetAccount)
+
+        // Create a transaction record for the source account
+        val sourceTransaction = Transaction(
+            date = LocalDateTime.now(),
+            amount = -transferReq.amount,
+            type = "Transfer",
+            targetAccount = targetAccount,
+            sourceAccount = sourceAccount
+        )
+
+        // Create a transaction record for the target account
+        val targetTransaction = Transaction(
+            date = LocalDateTime.now(),
+            amount = transferReq.amount,
+            type = "Transfer",
+            targetAccount = targetAccount,
+            sourceAccount = sourceAccount
+        )
+
+        // Save the transaction records
+        val savedSourceTransaction = transactionRepository.save(sourceTransaction)
+        val savedTargetTransaction = transactionRepository.save(targetTransaction)
+
+        // Create and return the response object
+        return TransferRes(
+            id = savedSourceTransaction.id,
+            sourceAccount = sourceAccount.accountNumber,
+            targetAccount = targetAccount.accountNumber,
+            type = "Transfer",
+            amount = transferReq.amount,
+            date = LocalDateTime.now(),
+            account = updatedSourceAccount // Return the updated source account with the response
+        )
     }
 }
