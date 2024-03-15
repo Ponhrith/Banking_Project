@@ -188,47 +188,6 @@ img{
         margin-top: 5rem;
     }
 
-    /* Dropdown */
-    &__dropdown{
-        overflow: hidden;
-        max-height: 21px;
-        transition: .4s ease-in-out;
-
-        &-collapse{
-            background-color: var(--first-color-light);
-            border-radius: .25rem;
-            margin-top: 1rem;
-        }
-        &-content{
-            display: grid;
-            row-gap: .5rem;
-            padding: .75rem 2.5rem .75rem 1.8rem;
-        }
-
-        &-item{
-            font-size: var(--smaller-font-size);
-            font-weight: var(--font-medium);
-            color: var(--text-color);
-            
-            &:hover{
-                color: var(--first-color);
-            }
-        }
-        &-icon{
-            margin-left: auto;
-            transition: .4s;
-        }
-
-        /* Show collapse */
-        &:hover{
-            max-height: 100rem;
-        }
-
-        /*Rotate icon arrow*/
-        &:hover  &-icon{
-            transform: rotate(180deg);
-        }
-    }
 }
 
 /*===== Show menu =====*/
