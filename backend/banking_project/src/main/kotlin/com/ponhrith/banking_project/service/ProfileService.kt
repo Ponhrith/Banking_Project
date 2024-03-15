@@ -40,7 +40,8 @@ class ProfileService(
                         id = account.id,
                         type = account.type,
                         number = account.accountNumber,
-                        balance = account.balance
+                        balance = account.balance,
+                        currency = account.currency
                     )
                 }
             )
@@ -61,7 +62,8 @@ class ProfileService(
                     id = account.id,
                     type = account.type,
                     number = account.accountNumber,
-                    balance = account.balance
+                    balance = account.balance,
+                    currency = account.currency
                 )
             }
         )
