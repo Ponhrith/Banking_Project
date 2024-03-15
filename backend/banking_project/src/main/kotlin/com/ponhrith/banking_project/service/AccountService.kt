@@ -18,7 +18,6 @@ class AccountService(
     private val accountRepository: AccountRepository,
     private val profileRepository: ProfileRepository
 ) {
-
     @Transactional
     fun createAccount(accountReq: AccountReq): AccountRes {
         // Check if the account type is valid
@@ -64,14 +63,22 @@ class AccountService(
         val depositsPrefix = "2222"
 
         // Generate random number suffix
-        val randomNumberSuffix = Random().nextInt(1000000000).toString().padStart(9, '0')
+        var randomNumberSuffix = Random().nextInt(1000000000).toString().padStart(9, '0')
 
         // Combine prefix and suffix based on account type
-        return when (accountType) {
+        val accountNumber = when (accountType) {
             "Savings" -> savingsPrefix + randomNumberSuffix
             "Joint" -> jointPrefix + randomNumberSuffix
             "Deposits" -> depositsPrefix + randomNumberSuffix
             else -> throw IllegalArgumentException("Invalid account type")
         }
+        // Check if the generated account number already exists in the database
+        val existingAccount = accountRepository.findByAccountNumber(accountNumber)
+        if (existingAccount != null) {
+            // If the generated account number already exists, recursively generate a new one
+            return generateAccountNumber(accountType)
+        }
+        return accountNumber
     }
+
 }

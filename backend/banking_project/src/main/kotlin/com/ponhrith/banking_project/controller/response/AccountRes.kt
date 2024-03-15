@@ -7,5 +7,5 @@ data class AccountRes(
     val profile: Profile,
     var type: String,
     var number: String,
-    var balance: Double
+    var balance: Double,
 )

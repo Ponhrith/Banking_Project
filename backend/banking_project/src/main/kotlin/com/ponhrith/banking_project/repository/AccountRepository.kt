@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 interface AccountRepository : JpaRepository<Account, Long> {
     fun findByProfileId(profileId: Long): List<Account>
     fun deleteByProfileId(profileId: Long)
+    fun findByAccountNumber(accountNumber: String): Account?
+
 }
