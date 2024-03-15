@@ -89,6 +89,27 @@ class AccountService(
         )
     }
 
+    fun getAccountByAccountNumber(accountNumber: String): ListAccountRes? {
+        val account = accountRepository.findByAccountNumber(accountNumber)
+        return account?.let {
+            ListAccountRes(
+                id = it.id,
+                type = it.type,
+                number = it.accountNumber,
+                balance = it.balance,
+                currency = it.currency,
+                profiles = it.profile?.let { profile ->
+                    listOf(ListAccProfRes(
+                        id = profile.id,
+                        fullname = profile.fullname,
+                        address = profile.address,
+                        email = profile.email
+                    ))
+                } ?: emptyList()
+            )
+        }
+    }
+
     @Transactional
     fun deleteAccount(accountId: Long) {
         // Check if the account exists
