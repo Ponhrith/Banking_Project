@@ -1,6 +1,7 @@
 package com.ponhrith.banking_project.service
 
 import com.ponhrith.banking_project.common.isValidAccountType
+import com.ponhrith.banking_project.common.isValidCurrencyType
 import com.ponhrith.banking_project.controller.request.AccountReq
 import com.ponhrith.banking_project.controller.response.AccountRes
 import com.ponhrith.banking_project.model.Account
@@ -24,8 +25,9 @@ class AccountService(
 
     @Transactional
     fun createAccount(accountReq: AccountReq): AccountRes {
-        // Check if the account type is valid
+        // Check if the field type is valid
         accountReq.type.isValidAccountType()
+        accountReq.currency.isValidCurrencyType()
 
         // Check if the profile exists
         val profileOptional = profileRepository.findById(accountReq.profileId)
@@ -41,7 +43,8 @@ class AccountService(
             type = accountReq.type,
             accountNumber = accountNumber,
             balance = 0.00, // Default balance
-            profile = profile
+            profile = profile,
+            currency = accountReq.currency
         )
 
         // Save the account
@@ -56,7 +59,8 @@ class AccountService(
             profile = profile, // Populate the profile object
             type = savedAccount.type,
             number = savedAccount.accountNumber,
-            balance = savedAccount.balance
+            balance = savedAccount.balance,
+            currency = savedAccount.currency
         )
     }
 

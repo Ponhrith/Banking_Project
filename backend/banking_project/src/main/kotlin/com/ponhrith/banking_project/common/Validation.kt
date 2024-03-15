@@ -13,6 +13,11 @@ fun String.isValidAccountType() {
         throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid account type")
 }
 
+fun String.isValidCurrencyType(){
+    if (!Constants.CURRENCY_TYPE.contains(this))
+        throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid currency type")
+}
+
 fun String.isValidEmail(): Boolean {
     if (this.isEmpty())
         throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email address cannot be empty")

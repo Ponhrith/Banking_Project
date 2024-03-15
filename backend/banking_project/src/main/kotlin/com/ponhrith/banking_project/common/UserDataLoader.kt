@@ -36,7 +36,8 @@ class UserDataLoader : CommandLineRunner {
                 type = "Savings",
                 accountNumber = "9999999999",
                 balance = 0.0,
-                profile = defaultProfile
+                profile = defaultProfile,
+                currency = "USD"
             )
 
             defaultProfile.account.add(defaultAccount)

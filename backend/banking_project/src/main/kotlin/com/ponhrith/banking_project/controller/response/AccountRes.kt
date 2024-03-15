@@ -8,4 +8,5 @@ data class AccountRes(
     var type: String,
     var number: String,
     var balance: Double,
+    var currency: String,
 )
