@@ -12,12 +12,25 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Service
 class TransactionService(
     private val accountRepository: AccountRepository,
     private val transactionRepository: TransactionRepository
 ) {
+
+    fun generateTransactionId(type: String, tableId: Long): String {
+        val prefix = when (type) {
+            "Withdraw" -> "WD"
+            "Transfer" -> "TSF"
+            "Credited" -> "CDT"
+            "Deposit" -> "DPS"
+            else -> throw IllegalArgumentException("Invalid transaction type")
+        }
+        val currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+        return "$prefix$currentDate$tableId"
+    }
 
     @Transactional
     fun depositMoney(depositReq: DepositReq): DepositRes {
@@ -31,11 +44,15 @@ class TransactionService(
         // Save the updated source account
         val updatedAccount = accountRepository.save(sourceAccount)
 
+        // Generate transaction ID for deposit
+        val transactionId = generateTransactionId("Deposit", sourceAccount.id)
+
         // Create a transaction record
         val transaction = Transaction(
             date = LocalDateTime.now(),
             amount = depositReq.amount,
             type = "Deposit",
+            transactionId = transactionId,  // Assign generated transaction ID
             targetAccount = sourceAccount,
             sourceAccount = sourceAccount // For deposit, target account is the same as the source account
         )
@@ -48,6 +65,7 @@ class TransactionService(
             id = savedTransaction.id,
             amount = savedTransaction.amount,
             date = savedTransaction.date,
+            transactionId = transactionId,
             account = updatedAccount // Return the updated account object with the response
         )
 
@@ -77,11 +95,15 @@ class TransactionService(
         val updatedSourceAccount = accountRepository.save(sourceAccount)
         val updatedTargetAccount = accountRepository.save(targetAccount)
 
+        // Generate transaction ID for transfer
+        val transactionId = generateTransactionId("Transfer", sourceAccount.id)
+
         // Create a transaction record for the source account
         val sourceTransaction = Transaction(
             date = LocalDateTime.now(),
             amount = -transferReq.amount,
             type = "Transfer",
+            transactionId = transactionId,  // Assign generated transaction ID
             targetAccount = targetAccount,
             sourceAccount = sourceAccount
         )
@@ -91,6 +113,7 @@ class TransactionService(
             date = LocalDateTime.now(),
             amount = transferReq.amount,
             type = "Transfer",
+            transactionId = transactionId,  // Assign same transaction ID for both source and target
             targetAccount = targetAccount,
             sourceAccount = sourceAccount
         )
@@ -107,6 +130,7 @@ class TransactionService(
             type = "Transfer",
             amount = transferReq.amount,
             date = LocalDateTime.now(),
+            transactionId = transactionId,
             account = updatedSourceAccount // Return the updated source account with the response
         )
     }

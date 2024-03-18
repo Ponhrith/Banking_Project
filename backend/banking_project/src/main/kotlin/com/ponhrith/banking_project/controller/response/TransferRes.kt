@@ -10,5 +10,6 @@ data class TransferRes(
     val type: String = "Transfer",
     var amount: Double,
     var date: LocalDateTime,
+    val transactionId : String,
     val account: Account? = null,
 )

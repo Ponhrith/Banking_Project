@@ -8,5 +8,6 @@ data class DepositRes(
     var amount: Double,
     var date: LocalDateTime,
     val type: String = "Deposit",
+    val transactionId : String,
     var account: Account? = null
 )
