@@ -1,5 +1,7 @@
 package com.ponhrith.banking_project.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
@@ -9,9 +11,12 @@ data class Support(
     val id: Long = 0,
     @Column(name = "message")
     var message: String,
+    @Column(name = "date")
+    var date: LocalDateTime,
 ) {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")
-    lateinit var profile: Profile
+    @JsonIgnore
+    var profile: Profile? = null
 }
 
