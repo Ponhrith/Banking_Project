@@ -10,4 +10,7 @@ interface AccountRepository : JpaRepository<Account, Long> {
     fun deleteByProfileId(profileId: Long)
     fun findByAccountNumber(accountNumber: String): Account?
 
+    fun findByType(type: String): List<Account>
+
+
 }

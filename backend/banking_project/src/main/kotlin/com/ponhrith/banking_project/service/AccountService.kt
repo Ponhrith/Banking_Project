@@ -7,7 +7,6 @@ import com.ponhrith.banking_project.controller.response.AccountRes
 import com.ponhrith.banking_project.controller.response.ListAccProfRes
 import com.ponhrith.banking_project.controller.response.ListAccountRes
 import com.ponhrith.banking_project.model.Account
-import com.ponhrith.banking_project.model.Profile
 import com.ponhrith.banking_project.repository.AccountRepository
 import com.ponhrith.banking_project.repository.ProfileRepository
 import org.slf4j.LoggerFactory
@@ -79,6 +78,27 @@ class AccountService(
                 balance = it.balance,
                 currency = it.currency,
                 profiles = it.profile?.let { profile ->
+                    listOf(ListAccProfRes(
+                        id = profile.id,
+                        fullname = profile.fullname,
+                        address = profile.address,
+                        email = profile.email
+                    ))
+                } ?: emptyList()
+            )
+        }
+    }
+
+    fun getAccountsByType(type: String): List<ListAccountRes> {
+        val accounts = accountRepository.findByType(type)
+        return accounts.map { account ->
+            ListAccountRes(
+                id = account.id,
+                type = account.type,
+                number = account.accountNumber,
+                balance = account.balance,
+                currency = account.currency,
+                profiles = account.profile?.let { profile ->
                     listOf(ListAccProfRes(
                         id = profile.id,
                         fullname = profile.fullname,
