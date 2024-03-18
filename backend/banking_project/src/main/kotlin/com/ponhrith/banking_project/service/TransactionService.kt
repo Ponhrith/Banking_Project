@@ -110,4 +110,15 @@ class TransactionService(
             account = updatedSourceAccount // Return the updated source account with the response
         )
     }
+    @Transactional
+    fun deleteTransaction(transactionId: Long) {
+        // Check if the transaction exists
+        val transactionOptional = transactionRepository.findById(transactionId)
+        val transaction = transactionOptional.orElseThrow {
+            ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found")
+        }
+
+        // Delete the transaction
+        transactionRepository.delete(transaction)
+    }
 }
