@@ -13,10 +13,10 @@ data class Support(
     var message: String,
     @Column(name = "date")
     var date: LocalDateTime,
-) {
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")
     @JsonIgnore
     var profile: Profile? = null
-}
+)
 
