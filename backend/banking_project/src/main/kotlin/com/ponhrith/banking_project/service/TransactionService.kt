@@ -3,6 +3,7 @@ package com.ponhrith.banking_project.service
 import com.ponhrith.banking_project.controller.request.DepositReq
 import com.ponhrith.banking_project.controller.request.TransferReq
 import com.ponhrith.banking_project.controller.response.DepositRes
+import com.ponhrith.banking_project.controller.response.ExchangeResponse
 import com.ponhrith.banking_project.controller.response.TransferRes
 import com.ponhrith.banking_project.model.Transaction
 import com.ponhrith.banking_project.repository.AccountRepository
@@ -10,6 +11,7 @@ import com.ponhrith.banking_project.repository.TransactionRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.client.RestTemplate
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -17,15 +19,27 @@ import java.time.format.DateTimeFormatter
 @Service
 class TransactionService(
     private val accountRepository: AccountRepository,
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val restTemplate: RestTemplate
+
 ) {
+
+    private val exchangeRateApiUrl = "https://api.frankfurter.app/latest"
+
+    private fun fetchExchangeRate(amount: Double, fromCurrency: String, toCurrency: String): Double {
+        val url = "$exchangeRateApiUrl?amount=$amount&from=$fromCurrency&to=$toCurrency"
+        val exchangeResponse: ExchangeResponse? = restTemplate.getForObject(url, ExchangeResponse::class.java)
+            ?: throw RuntimeException("Failed to fetch exchange rate")
+        return exchangeResponse?.rates?.getOrDefault(toCurrency, 0.0)
+            ?: throw RuntimeException("Exchange rate not found")
+    }
 
     fun generateTransactionId(type: String, tableId: Long): String {
         val prefix = when (type) {
             "Withdraw" -> "WD"
             "Transfer" -> "TSF"
             "Credited" -> "CDT"
-            "Deposit" -> "DPS"
+            "Deposit"  -> "DPS"
             else -> throw IllegalArgumentException("Invalid transaction type")
         }
         val currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))
@@ -87,9 +101,15 @@ class TransactionService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient balance in the source account")
         }
 
+        val sourceCurrency = sourceAccount.currency
+        val targetCurrency = targetAccount.currency
+
+        // Fetch the exchange rate and converted amount from the API
+        val convertedAmount = fetchExchangeRate(transferReq.amount, sourceCurrency, targetCurrency)
+
         // Update the balances of source and target accounts
         sourceAccount.balance -= transferReq.amount
-        targetAccount.balance += transferReq.amount
+        targetAccount.balance += convertedAmount
 
         // Save the updated source and target accounts
         val updatedSourceAccount = accountRepository.save(sourceAccount)
@@ -111,7 +131,7 @@ class TransactionService(
         // Create a transaction record for the target account
         val targetTransaction = Transaction(
             date = LocalDateTime.now(),
-            amount = transferReq.amount,
+            amount = convertedAmount,
             type = "Transfer",
             transactionId = transactionId,  // Assign same transaction ID for both source and target
             targetAccount = targetAccount,
@@ -134,6 +154,7 @@ class TransactionService(
             account = updatedSourceAccount // Return the updated source account with the response
         )
     }
+
     @Transactional
     fun deleteTransaction(transactionId: Long) {
         // Check if the transaction exists
