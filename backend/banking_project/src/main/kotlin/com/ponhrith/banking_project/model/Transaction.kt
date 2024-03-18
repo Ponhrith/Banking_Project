@@ -15,6 +15,8 @@ data class Transaction(
     var amount: Double,
     @Column(name = "type")
     var type: String,
+    @Column(name = "transaction_id")
+    var transactionId: String,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "target_account_id")
     var targetAccount: Account,
