@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/transaction")
-@CrossOrigin("http://127.0.0.1:5500")
+@CrossOrigin("http://localhost:8080/")
 class TransactionController(
     private val transactionService: TransactionService
 ) {
