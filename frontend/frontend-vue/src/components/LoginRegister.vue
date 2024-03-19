@@ -191,6 +191,7 @@ export default {
       loginSuccess: false,
       registerSuccess: false,
       passwordMatchError: false,
+      token: null,
     };
   },
   methods: {
@@ -254,6 +255,8 @@ export default {
         );
 
         if (response.ok) {
+          const responseData = await response.json();
+          this.token = responseData.token; // Store the JWT token
           this.loginSuccess = true; // Set login success to true
           this.loginForm = { email: '', password: '' }; // Reset login form
           setTimeout(() => {
