@@ -146,7 +146,7 @@
                 Register
               </button>
             </div>
-            <img src="image/shopping-bag.png" class="image" alt="" />
+            <img src="../assets/shopping-bag.png" class="image" alt="" />
           </div>
           <div class="custom-panel right-panel">
             <div class="content">
@@ -156,13 +156,13 @@
                 Login
               </button>
             </div>
-            <img src="image/bank.png" class="image" alt="" />
+            <img src="../assets/bank.png" class="image" alt="" />
           </div>
         </div>
       </div>
 </template>
 
-<script lang="ts">
+<script>
 
 export default {
   name: 'LoginRegister',
