@@ -164,9 +164,11 @@
 
 <script>
 
+
 export default {
   name: 'LoginRegister',
   data() {
+ 
     return {
       signUpMode: false,
       loginForm: {
@@ -191,7 +193,7 @@ export default {
       loginSuccess: false,
       registerSuccess: false,
       passwordMatchError: false,
-      token: null,
+      token: [],
     };
   },
   methods: {
@@ -230,50 +232,52 @@ export default {
       return regex.test(fullname);
     },
     async submitLoginForm() {
-      // Reset login error message
-      this.loginError = "";
+    // Reset login error message
+    this.loginError = "";
 
-      // Check if email and password fields are empty
-      if (!this.loginForm.email || !this.loginForm.password) {
+    // Check if email and password fields are empty
+    if (!this.loginForm.email || !this.loginForm.password) {
         this.loginError = "Fields cannot be empty!"; // Set login error message
         setTimeout(() => {
-          this.loginError = "";
+            this.loginError = "";
         }, 3000);
         return;
-      }
+    }
 
-      try {
+    try {
         const response = await fetch(
-          "http://localhost:8080/api/v1/auth/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(this.loginForm),
-          }
+            "http://localhost:8080/api/v1/auth/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(this.loginForm),
+            }
         );
 
         if (response.ok) {
-          const responseData = await response.json();
-          this.token = responseData.token; // Store the JWT token
-          this.loginSuccess = true; // Set login success to true
-          this.loginForm = { email: '', password: '' }; // Reset login form
-          setTimeout(() => {
-            this.loginSuccess = false; // Reset login success after 3 seconds
-            window.location.href = "/dashboard/dashboard.html"; // Navigate to another page after 3 seconds
-          }, 2000);
+            const responseData = await response.json();
+            this.token = responseData.token; // Store the JWT token
+            this.loginSuccess = true; // Set login success to true
+            this.loginForm = { email: '', password: '' }; // Reset login form
+            setTimeout(() => {
+                this.loginSuccess = false; // Reset login success after 3 seconds
+                // Redirect to the sidebar route
+                this.$router.push({path: '/sidebar'});
+            }, 2000);
         } else {
-          this.loginError = "Invalid email or password!"; // Set login error message
-          setTimeout(() => {
-            this.loginError = "";
-          }, 3000);
+            this.loginError = "Invalid email or password!"; // Set login error message
+            setTimeout(() => {
+                this.loginError = "";
+            }, 3000);
         }
-      } catch (error) {
+    } catch (error) {
         console.error("Error:", error);
         alert("An error occurred while logging in."); // Show generic error message
-      }
-    },
+    }
+},
+
     async submitRegisterForm() {
       // Check if passwords match
       this.registerError = "";
@@ -379,13 +383,13 @@ export default {
         console.error("Error:", error);
         alert("An error occurred while registering."); // Show generic error message
       }
-      
+
     },
   },
 };
 </script>
 
-<style>
+<style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
 
 * {

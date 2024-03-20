@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+<div id="app">
         <div :class="{ 'show-menu': isMenuOpen }" class="nav" ref="navbar">
             <nav class="nav__container">
                 <div>
@@ -52,6 +52,7 @@
 
 <script>
 export default {
+    name: 'Side_Bar',
     data() {
         return {
             isMenuOpen: false
