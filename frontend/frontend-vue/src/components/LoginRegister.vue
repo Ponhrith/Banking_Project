@@ -1,333 +1,269 @@
 <template>
-     <div
-        class="alert alert-success text-center"
-        role="alert"
-        v-if="loginSuccess"
-      >
-        <i class="fas fa-check-circle"></i> Login successful!
-      </div>
-      <div
-        class="alert alert-success text-center"
-        role="alert"
-        v-if="registerSuccess"
-      >
-        <i class="fas fa-check-circle"></i> Registration successful!
-      </div>
-      <div class="custom-container" :class="{ 'sign-up-mode': signUpMode }">
-        <div class="custom-forms-container">
-          <div class="signin-signup">
-            <form
-              v-if="!signUpMode"
-              class="sign-in-form"
-              @submit.prevent="submitLoginForm"
-            >
-              <h2 class="title">Login</h2>
-              <div class="custom-input-field">
-                <i class="fas fa-envelope"></i>
-                <input
-                  type="text"
-                  placeholder="Email *"
-                  v-model="loginForm.email"
-                />
-              </div>
-              <div class="custom-input-field">
-                <i class="fas fa-lock"></i>
-                <input
-                  :type="loginPasswordFieldType"
-                  placeholder="Password *"
-                  v-model="loginForm.password"
-                />
-                <span
-                  class="password-toggle-icon"
-                  @click="togglePassword('login')"
-                  ><i
-                    class="fas"
-                    :class="showLoginPassword ? 'fa-eye-slash' : 'fa-eye'"
-                  ></i
-                ></span>
-              </div>
-              <p class="error-message" v-if="loginError">{{ loginError }}</p>
-              <!-- Display login error message -->
-              <input type="submit" value="Login" class="btnn solid" />
-            </form>
+  <div class="alert alert-success text-center" role="alert" v-if="loginSuccess">
+    <i class="fas fa-check-circle"></i> Login successful!
+  </div>
+  <div class="alert alert-success text-center" role="alert" v-if="registerSuccess">
+    <i class="fas fa-check-circle"></i> Registration successful!
+  </div>
+  <div class="custom-container" :class="{ 'sign-up-mode': signUpMode }">
+    <div class="custom-forms-container">
+      <div class="signin-signup">
+        <form v-if="!signUpMode" class="sign-in-form" @submit.prevent="submitLoginForm">
+          <h2 class="title">Login</h2>
+          <div class="custom-input-field">
+            <i class="fas fa-envelope"></i>
+            <input type="text" placeholder="Email *" v-model="loginForm.email" />
+          </div>
+          <div class="custom-input-field">
+            <i class="fas fa-lock"></i>
+            <input :type="loginPasswordFieldType" placeholder="Password *" v-model="loginForm.password" />
+            <span class="password-toggle-icon" @click="togglePassword('login')"><i class="fas"
+                :class="showLoginPassword ? 'fa-eye-slash' : 'fa-eye'"></i></span>
+          </div>
+          <p class="error-message" v-if="loginError">{{ loginError }}</p>
+          <!-- Display login error message -->
+          <input type="submit" value="Login" class="btnn solid" />
+        </form>
 
-            <form v-else class="sign-up-form">
-              <h2 class="title">Register</h2>
-              <div class="custom-input-field">
-                <i class="fas fa-user"></i>
-                <input
-                  type="text"
-                  placeholder="Full Name *"
-                  v-model="registerForm.fullname"
-                />
-              </div>
-              <div class="custom-input-field">
-                <i class="fas fa-address-book"></i>
-                <input
-                  type="text"
-                  placeholder="Address *"
-                  v-model="registerForm.address"
-                />
-              </div>
-              <div class="custom-input-field">
-                <i class="fas fa-envelope"></i>
-                <input
-                  type="email"
-                  placeholder="Email *"
-                  v-model="registerForm.email"
-                />
-              </div>
-              <div class="custom-input-field">
-                <i class="fas fa-lock"></i>
-                <input
-                  :type="registerPasswordFieldType"
-                  placeholder="Password *"
-                  v-model="registerForm.password"
-                />
-                <span
-                  class="password-toggle-icon"
-                  @click="togglePassword('register')"
-                  ><i
-                    class="fas"
-                    :class="showRegisterPassword ? 'fa-eye-slash' : 'fa-eye'"
-                  ></i
-                ></span>
-              </div>
-              <div
-                class="custom-input-field"
-              >
-                <i class="fas fa-lock"></i>
-                <input
-                  :type="registerConfirmPasswordFieldType"
-                  placeholder="Confirm Password *"
-                  v-model="registerForm.confirmPassword"
-                />
-                <span
-                  class="password-toggle-icon"
-                  @click="togglePassword('confirm')"
-                  ><i
-                    class="fas"
-                    :class="showRegisterConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"
-                  ></i
-                ></span>
-              </div>
-              <p class="error-message" v-if="registerError">
-                {{ registerError }}
-              </p>
-              <!-- Display register error message -->
-              <input
-                type="submit"
-                class="btnn"
-                value="Register"
-                @click.prevent="submitRegisterForm"
-              />
-              <p class="social-text">Or sign up with social platforms</p>
-              <div class="social-media">
-                <a href="#" class="custom-social-icon">
-                  <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="#" class="custom-social-icon">
-                  <i class="fab fa-whatsapp"></i>
-                </a>
-                <a href="#" class="custom-social-icon">
-                  <i class="fab fa-telegram"></i>
-                </a>
-              </div>
-            </form>
+        <form v-else class="sign-up-form">
+          <h2 class="title">Register</h2>
+          <div class="custom-input-field">
+            <i class="fas fa-user"></i>
+            <input type="text" placeholder="Full Name *" v-model="registerForm.fullname" />
           </div>
-        </div>
-
-        <div class="custom-panels-container">
-          <div class="custom-panel left-panel">
-            <div class="content">
-              <h3>Don't have an account?</h3>
-              <p></p>
-              <button class="btnn transparent" @click="toggleMode('register')">
-                Register
-              </button>
-            </div>
-            <img src="../assets/shopping-bag.png" class="image" alt="" />
+          <div class="custom-input-field">
+            <i class="fas fa-address-book"></i>
+            <input type="text" placeholder="Address *" v-model="registerForm.address" />
           </div>
-          <div class="custom-panel right-panel">
-            <div class="content">
-              <h3>Already have an account?</h3>
-              <p></p>
-              <button class="btnn transparent" @click="toggleMode('login')">
-                Login
-              </button>
-            </div>
-            <img src="../assets/bank.png" class="image" alt="" />
+          <div class="custom-input-field">
+            <i class="fas fa-envelope"></i>
+            <input type="email" placeholder="Email *" v-model="registerForm.email" />
           </div>
-        </div>
+          <div class="custom-input-field">
+            <i class="fas fa-lock"></i>
+            <input :type="registerPasswordFieldType" placeholder="Password *" v-model="registerForm.password" />
+            <span class="password-toggle-icon" @click="togglePassword('register')"><i class="fas"
+                :class="showRegisterPassword ? 'fa-eye-slash' : 'fa-eye'"></i></span>
+          </div>
+          <div class="custom-input-field">
+            <i class="fas fa-lock"></i>
+            <input :type="registerConfirmPasswordFieldType" placeholder="Confirm Password *"
+              v-model="registerForm.confirmPassword" />
+            <span class="password-toggle-icon" @click="togglePassword('confirm')"><i class="fas"
+                :class="showRegisterConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"></i></span>
+          </div>
+          <p class="error-message" v-if="registerError">
+            {{ registerError }}
+          </p>
+          <!-- Display register error message -->
+          <input type="submit" class="btnn" value="Register" @click.prevent="submitRegisterForm" />
+          <p class="social-text">Or sign up with social platforms</p>
+          <div class="social-media">
+            <a href="#" class="custom-social-icon">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="custom-social-icon">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="#" class="custom-social-icon">
+              <i class="fab fa-telegram"></i>
+            </a>
+          </div>
+        </form>
       </div>
+    </div>
+
+    <div class="custom-panels-container">
+      <div class="custom-panel left-panel">
+        <div class="content">
+          <h3>Don't have an account?</h3>
+          <p></p>
+          <button class="btnn transparent" @click="toggleMode('register')">
+            Register
+          </button>
+        </div>
+        <img src="../assets/shopping-bag.png" class="image" alt="" />
+      </div>
+      <div class="custom-panel right-panel">
+        <div class="content">
+          <h3>Already have an account?</h3>
+          <p></p>
+          <button class="btnn transparent" @click="toggleMode('login')">
+            Login
+          </button>
+        </div>
+        <img src="../assets/bank.png" class="image" alt="" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'LoginRegister',
-  data() {
- 
-    return {
-      signUpMode: false,
-      loginForm: {
-        email: "",
-        password: "",
-      },
-      registerForm: {
-        fullname: "",
-        address: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      },
-      showLoginPassword: false,
-      showRegisterPassword: false,
-      showRegisterConfirmPassword: false,
-      loginPasswordFieldType: "password",
-      registerPasswordFieldType: "password",
-      registerConfirmPasswordFieldType: "password",
-      loginError: "",
-      registerError: "",
-      loginSuccess: false,
-      registerSuccess: false,
-      passwordMatchError: false,
-      token: [],
-    };
-  },
-  methods: {
-    toggleMode(mode) {
-      this.signUpMode = mode === "register";
-    },
-    togglePassword(form) {
-      if (form === "login") {
-        this.showLoginPassword = !this.showLoginPassword;
-        this.loginPasswordFieldType = this.showLoginPassword
-          ? "text"
-          : "password";
-      } else if (form === "register") {
-        this.showRegisterPassword = !this.showRegisterPassword;
-        this.registerPasswordFieldType = this.showRegisterPassword
-          ? "text"
-          : "password";
-      } else if (form === "confirm") {
-        this.showRegisterConfirmPassword = !this.showRegisterConfirmPassword;
-        this.registerConfirmPasswordFieldType = this.showRegisterConfirmPassword
-          ? "text"
-          : "password";
-      }
-    },
-    isValidEmail(email) {
-      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      return regex.test(email);
-    },
-    isValidPassword(password) {
-      const regex =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-      return regex.test(password);
-    },
-    isValidFullName(fullname) {
-      const regex = /^[a-zA-Z]+[\s][a-zA-Z]+$/;
-      return regex.test(fullname);
-    },
-    async submitLoginForm() {
-    // Reset login error message
-    this.loginError = "";
+  setup() {
+    const router = useRouter(); // Import Vue Router
 
-    // Check if email and password fields are empty
-    if (!this.loginForm.email || !this.loginForm.password) {
-        this.loginError = "Fields cannot be empty!"; // Set login error message
+    const signUpMode = ref(false);
+    const loginForm = ref({
+      email: '',
+      password: '',
+    });
+    const registerForm = ref({
+      fullname: '',
+      address: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    });
+    const showLoginPassword = ref(false);
+    const showRegisterPassword = ref(false);
+    const showRegisterConfirmPassword = ref(false);
+    const loginPasswordFieldType = ref('password');
+    const registerPasswordFieldType = ref('password');
+    const registerConfirmPasswordFieldType = ref('password');
+    const loginError = ref('');
+    const registerError = ref('');
+    const loginSuccess = ref(false);
+    const registerSuccess = ref(false);
+    const token = ref(''); // Define token variable
+
+    const toggleMode = mode => {
+      signUpMode.value = mode === 'register';
+    };
+
+    const togglePassword = form => {
+      if (form === 'login') {
+        showLoginPassword.value = !showLoginPassword.value;
+        loginPasswordFieldType.value = showLoginPassword.value ? 'text' : 'password';
+      } else if (form === 'register') {
+        showRegisterPassword.value = !showRegisterPassword.value;
+        registerPasswordFieldType.value = showRegisterPassword.value ? 'text' : 'password';
+      } else if (form === 'confirm') {
+        showRegisterConfirmPassword.value = !showRegisterConfirmPassword.value;
+        registerConfirmPasswordFieldType.value = showRegisterConfirmPassword.value ? 'text' : 'password';
+      }
+    };
+
+    // Validation methods
+    const isValidFullName = (fullname) => {
+      // Implement your validation logic for full name
+      // For example, checking if it contains only letters and spaces
+      return /^[a-zA-Z\s]+$/.test(fullname);
+    };
+
+    const isValidEmail = (email) => {
+      // Implement your validation logic for email
+      // For example, using a regular expression
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
+    const isValidPassword = (password) => {
+      // Implement your validation logic for password
+      // For example, checking if it meets certain criteria like length, contains special characters, etc.
+      return password.length >= 8;
+    };
+
+    const submitLoginForm = async () => {
+      // Reset login error message
+      loginError.value = "";
+
+      // Check if email and password fields are empty
+      if (!loginForm.value.email || !loginForm.value.password) {
+        loginError.value = "Fields cannot be empty!"; // Set login error message
         setTimeout(() => {
-            this.loginError = "";
+          loginError.value = "";
         }, 3000);
         return;
-    }
+      }
 
-    try {
+      try {
         const response = await fetch(
-            "http://localhost:8080/api/v1/auth/login",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(this.loginForm),
-            }
+          "http://localhost:8080/api/v1/auth/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(loginForm.value),
+          }
         );
 
         if (response.ok) {
-            const responseData = await response.json();
-            this.token = responseData.token; // Store the JWT token
-            this.loginSuccess = true; // Set login success to true
-            this.loginForm = { email: '', password: '' }; // Reset login form
-            setTimeout(() => {
-                this.loginSuccess = false; // Reset login success after 3 seconds
-                // Redirect to the sidebar route
-                this.$router.push({path: '/sidebar'});
-            }, 2000);
+          const responseData = await response.json();
+          token.value = responseData.token; // Store the JWT token
+          loginSuccess.value = true; // Set login success to true
+          loginForm.value = { email: '', password: '' }; // Reset login form
+          setTimeout(() => {
+            loginSuccess.value = false; // Reset login success after 3 seconds
+            // Redirect to the sidebar route
+            router.push('/sidebar');
+          }, 2000);
         } else {
-            this.loginError = "Invalid email or password!"; // Set login error message
-            setTimeout(() => {
-                this.loginError = "";
-            }, 3000);
+          loginError.value = "Invalid email or password!"; // Set login error message
+          setTimeout(() => {
+            loginError.value = "";
+          }, 3000);
         }
-    } catch (error) {
+      } catch (error) {
         console.error("Error:", error);
         alert("An error occurred while logging in."); // Show generic error message
-    }
-},
+      }
+    };
 
-    async submitRegisterForm() {
+    const submitRegisterForm = async () => {
       // Check if passwords match
-      this.registerError = "";
+      registerError.value = "";
 
       // Check if any fields are empty
       if (
-        !this.registerForm.fullname ||
-        !this.registerForm.address ||
-        !this.registerForm.email ||
-        !this.registerForm.password ||
-        !this.registerForm.confirmPassword
+        !registerForm.value.fullname ||
+        !registerForm.value.address ||
+        !registerForm.value.email ||
+        !registerForm.value.password ||
+        !registerForm.value.confirmPassword
       ) {
-        this.registerError = "Fields cannot be empty!"; // Set register error message
+        registerError.value = "Fields cannot be empty!"; // Set register error message
         setTimeout(() => {
-          this.registerError = "";
+          registerError.value = "";
         }, 3000);
         return;
       }
 
-      if (this.registerForm.password !== this.registerForm.confirmPassword) {
-        this.registerError = "Passwords do not match!"; // Set register error message
+      if (registerForm.value.password !== registerForm.value.confirmPassword) {
+        registerError.value = "Passwords do not match!"; // Set register error message
         setTimeout(() => {
-          this.registerError = "";
+          registerError.value = "";
         }, 3000);
         return;
       }
 
       // Check if full name is valid
-      if (!this.isValidFullName(this.registerForm.fullname)) {
-        this.registerError = "Invalid full name format!"; // Set register error message
+      if (!isValidFullName(registerForm.value.fullname)) {
+        registerError.value = "Invalid full name format!"; // Set register error message
         setTimeout(() => {
-          this.registerError = "";
+          registerError.value = "";
         }, 3000);
         return;
       }
 
       // Check if email is valid
-      if (!this.isValidEmail(this.registerForm.email)) {
-        this.registerError = "Invalid email address"; // Set register error message
+      if (!isValidEmail(registerForm.value.email)) {
+        registerError.value = "Invalid email address"; // Set register error message
         setTimeout(() => {
-          this.registerError = "";
+          registerError.value = "";
         }, 3000);
         return;
       }
 
       // Check if password is valid
-      if (!this.isValidPassword(this.registerForm.password)) {
-        this.registerError = "Invalid password format!"; // Set register error message
+      if (!isValidPassword(registerForm.value.password)) {
+        registerError.value = "Invalid password format!"; // Set register error message
         setTimeout(() => {
-          this.registerError = "";
+          registerError.value = "";
         }, 3000);
         return;
       }
@@ -342,9 +278,9 @@ export default {
         if (emailCheckResponse.ok) {
           const emailExists = await emailCheckResponse.json();
           if (emailExists) {
-            this.registerError = "Email already exists";
+            registerError.value = "Email already exists";
             setTimeout(() => {
-              this.registerError = "";
+              registerError.value = "";
             }, 3000);
             return;
           }
@@ -356,13 +292,13 @@ export default {
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify(this.registerForm),
+              body: JSON.stringify(registerForm.value),
             }
           );
           const registerData = await registerResponse.json();
           if (registerResponse.ok) {
-            this.registerSuccess = true; // Set register success to true
-            this.registerForm = { // Clear the form
+            registerSuccess.value = true; // Set register success to true
+            registerForm.value = { // Clear the form
               fullname: '',
               address: '',
               email: '',
@@ -370,7 +306,7 @@ export default {
               confirmPassword: ''
             };
             setTimeout(() => {
-              this.registerSuccess = false; // Reset register success after 3 seconds
+              registerSuccess.value = false; // Reset register success after 3 seconds
               window.location.href = "/dashboard/dashboard.html"; // Navigate to another page after 3 seconds
             }, 2000);
           } else {
@@ -383,10 +319,29 @@ export default {
         console.error("Error:", error);
         alert("An error occurred while registering."); // Show generic error message
       }
-
-    },
+    };
+    return {
+      signUpMode,
+      loginForm,
+      registerForm,
+      showLoginPassword,
+      showRegisterPassword,
+      showRegisterConfirmPassword,
+      loginPasswordFieldType,
+      registerPasswordFieldType,
+      registerConfirmPasswordFieldType,
+      loginError,
+      registerError,
+      loginSuccess,
+      registerSuccess,
+      toggleMode,
+      togglePassword,
+      submitLoginForm,
+      submitRegisterForm,
+    };
   },
 };
+
 </script>
 
 <style scoped>
@@ -526,7 +481,7 @@ form.sign-in-form {
 
 .btnn {
   width: 150px;
-  background-color: #B881FA  ;
+  background-color: #B881FA;
   border: none;
   outline: none;
   height: 49px;
@@ -542,6 +497,7 @@ form.sign-in-form {
 .btnn:hover {
   background-color: #DBA1F5;
 }
+
 .custom-panels-container {
   position: absolute;
   height: 100%;
@@ -560,7 +516,7 @@ form.sign-in-form {
   top: -10%;
   right: 48%;
   transform: translateY(-50%);
-  background-image: linear-gradient(-45deg, #CCABF3  0%, #AC73F1  100%);
+  background-image: linear-gradient(-45deg, #CCABF3 0%, #AC73F1 100%);
   transition: 1.8s ease-in-out;
   border-radius: 50%;
   z-index: 6;
@@ -667,6 +623,7 @@ form.sign-in-form {
     min-height: 800px;
     height: 100vh;
   }
+
   .signin-signup {
     width: 100%;
     top: 95%;
@@ -798,9 +755,11 @@ form.sign-in-form {
   .image {
     display: none;
   }
+
   .custom-panel .content {
     padding: 0.5rem 1rem;
   }
+
   .custom-container {
     padding: 1.5rem;
   }
@@ -830,17 +789,22 @@ form.sign-in-form {
   position: fixed;
   top: 0;
   left: 50%;
-  transform: translate3d(-50%, 0, 0); /* Center the alert horizontally */
-  z-index: 1000; /* Ensure the alert is above other elements */
+  transform: translate3d(-50%, 0, 0);
+  /* Center the alert horizontally */
+  z-index: 1000;
+  /* Ensure the alert is above other elements */
   animation: slideDown 0.5s ease;
 }
 
 @keyframes slideDown {
   0% {
-    transform: translate3d(-50%, -100%, 0); /* Start from above the viewport */
+    transform: translate3d(-50%, -100%, 0);
+    /* Start from above the viewport */
   }
+
   100% {
-    transform: translate3d(-50%, 0, 0); /* End at the top of the viewport */
+    transform: translate3d(-50%, 0, 0);
+    /* End at the top of the viewport */
   }
 }
 </style>

@@ -11,7 +11,7 @@ const router = createRouter({
         {
             path: '/sidebar',
             name: Side_Bar,
-            component: () => import('./components/Side_Bar.vue')
+            component: Side_Bar
         },
     ]
 });
