@@ -101,12 +101,12 @@
 <script>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 export default {
   name: 'LoginRegister',
   setup() {
-    const router = useRouter(); // Import Vue Router
-
+    const router = useRouter();
     const signUpMode = ref(false);
     const loginForm = ref({
       email: '',
@@ -129,7 +129,7 @@ export default {
     const registerError = ref('');
     const loginSuccess = ref(false);
     const registerSuccess = ref(false);
-    const token = ref(''); // Define token variable
+    const token = ref('');
 
     const toggleMode = mode => {
       signUpMode.value = mode === 'register';
@@ -148,32 +148,23 @@ export default {
       }
     };
 
-    // Validation methods
     const isValidFullName = (fullname) => {
-      // Implement your validation logic for full name
-      // For example, checking if it contains only letters and spaces
       return /^[a-zA-Z\s]+$/.test(fullname);
     };
 
     const isValidEmail = (email) => {
-      // Implement your validation logic for email
-      // For example, using a regular expression
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     };
 
     const isValidPassword = (password) => {
-      // Implement your validation logic for password
-      // For example, checking if it meets certain criteria like length, contains special characters, etc.
       return password.length >= 8;
     };
 
     const submitLoginForm = async () => {
-      // Reset login error message
       loginError.value = "";
 
-      // Check if email and password fields are empty
       if (!loginForm.value.email || !loginForm.value.password) {
-        loginError.value = "Fields cannot be empty!"; // Set login error message
+        loginError.value = "Fields cannot be empty!";
         setTimeout(() => {
           loginError.value = "";
         }, 3000);
@@ -181,44 +172,34 @@ export default {
       }
 
       try {
-        const response = await fetch(
+        const response = await axios.post(
           "http://localhost:8080/api/v1/auth/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(loginForm.value),
-          }
+          loginForm.value
         );
 
-        if (response.ok) {
-          const responseData = await response.json();
-          token.value = responseData.token; // Store the JWT token
-          loginSuccess.value = true; // Set login success to true
-          loginForm.value = { email: '', password: '' }; // Reset login form
+        if (response.status === 200) {
+          token.value = response.data.token;
+          loginSuccess.value = true;
+          loginForm.value = { email: '', password: '' };
           setTimeout(() => {
-            loginSuccess.value = false; // Reset login success after 3 seconds
-            // Redirect to the sidebar route
+            loginSuccess.value = false;
             router.push('/sidebar');
           }, 2000);
         } else {
-          loginError.value = "Invalid email or password!"; // Set login error message
+          loginError.value = "Invalid email or password!";
           setTimeout(() => {
             loginError.value = "";
           }, 3000);
         }
       } catch (error) {
         console.error("Error:", error);
-        alert("An error occurred while logging in."); // Show generic error message
+        alert("An error occurred while logging in.");
       }
     };
 
     const submitRegisterForm = async () => {
-      // Check if passwords match
       registerError.value = "";
 
-      // Check if any fields are empty
       if (
         !registerForm.value.fullname ||
         !registerForm.value.address ||
@@ -226,7 +207,7 @@ export default {
         !registerForm.value.password ||
         !registerForm.value.confirmPassword
       ) {
-        registerError.value = "Fields cannot be empty!"; // Set register error message
+        registerError.value = "Fields cannot be empty!";
         setTimeout(() => {
           registerError.value = "";
         }, 3000);
@@ -234,49 +215,45 @@ export default {
       }
 
       if (registerForm.value.password !== registerForm.value.confirmPassword) {
-        registerError.value = "Passwords do not match!"; // Set register error message
+        registerError.value = "Passwords do not match!";
         setTimeout(() => {
           registerError.value = "";
         }, 3000);
         return;
       }
 
-      // Check if full name is valid
       if (!isValidFullName(registerForm.value.fullname)) {
-        registerError.value = "Invalid full name format!"; // Set register error message
+        registerError.value = "Invalid full name format!";
         setTimeout(() => {
           registerError.value = "";
         }, 3000);
         return;
       }
 
-      // Check if email is valid
       if (!isValidEmail(registerForm.value.email)) {
-        registerError.value = "Invalid email address"; // Set register error message
+        registerError.value = "Invalid email address";
         setTimeout(() => {
           registerError.value = "";
         }, 3000);
         return;
       }
 
-      // Check if password is valid
       if (!isValidPassword(registerForm.value.password)) {
-        registerError.value = "Invalid password format!"; // Set register error message
+        registerError.value = "Invalid password format!";
         setTimeout(() => {
           registerError.value = "";
         }, 3000);
         return;
       }
 
-      // If passwords match, proceed with registration
       try {
-        const emailCheckResponse = await fetch(
+        const emailCheckResponse = await axios.get(
           `http://localhost:8080/api/v1/profile/check-email?email=${encodeURIComponent(
-            this.registerForm.email
+            registerForm.value.email
           )}`
         );
-        if (emailCheckResponse.ok) {
-          const emailExists = await emailCheckResponse.json();
+        if (emailCheckResponse.status === 200) {
+          const emailExists = emailCheckResponse.data;
           if (emailExists) {
             registerError.value = "Email already exists";
             setTimeout(() => {
@@ -284,21 +261,13 @@ export default {
             }, 3000);
             return;
           }
-          // Proceed with registration if email does not exist
-          const registerResponse = await fetch(
+          const registerResponse = await axios.post(
             "http://localhost:8080/api/v1/profile",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(registerForm.value),
-            }
+            registerForm.value
           );
-          const registerData = await registerResponse.json();
-          if (registerResponse.ok) {
-            registerSuccess.value = true; // Set register success to true
-            registerForm.value = { // Clear the form
+          if (registerResponse.status === 200) {
+            registerSuccess.value = true;
+            registerForm.value = {
               fullname: '',
               address: '',
               email: '',
@@ -306,18 +275,18 @@ export default {
               confirmPassword: ''
             };
             setTimeout(() => {
-              registerSuccess.value = false; // Reset register success after 3 seconds
-              window.location.href = "/dashboard/dashboard.html"; // Navigate to another page after 3 seconds
+              registerSuccess.value = false;
+              window.location.href = "/dashboard/dashboard.html";
             }, 2000);
           } else {
-            alert("Registration failed: " + registerData.message); // Show error message
+            alert("Registration failed: " + registerResponse.data.message);
           }
         } else {
-          alert("Failed to check email existence"); // Show error message
+          alert("Failed to check email existence");
         }
       } catch (error) {
         console.error("Error:", error);
-        alert("An error occurred while registering."); // Show generic error message
+        alert("An error occurred while registering.");
       }
     };
     return {
@@ -341,7 +310,6 @@ export default {
     };
   },
 };
-
 </script>
 
 <style scoped>
