@@ -13,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/v1/account")
-@CrossOrigin("http://localhost:8080/")
+@CrossOrigin("http://localhost:8081/")
 class AccountController(private val accountService: AccountService) {
 
     @GetMapping

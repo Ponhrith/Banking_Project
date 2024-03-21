@@ -50,7 +50,7 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration().applyPermitDefaultValues()
-        configuration.allowedOrigins = listOf("http://localhost:8080/")
+        configuration.allowedOrigins = listOf("http://localhost:8081/")
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)
         return source

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@CrossOrigin("http://localhost:8080/")
+@CrossOrigin("http://localhost:8081/")
 class LoginController(
     private val loginService: LoginService
 ) {

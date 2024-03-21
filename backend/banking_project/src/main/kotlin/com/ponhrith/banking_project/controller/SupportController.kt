@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/support")
-@CrossOrigin("http://localhost:8080/")
+@CrossOrigin("http://localhost:8081/")
 class SupportController(
     private val supportService: SupportService
 ) {
