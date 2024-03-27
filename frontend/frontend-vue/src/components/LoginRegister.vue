@@ -234,9 +234,6 @@ export default {
 
 
 
-
-
-
     async submitRegisterForm() {
       // Check if passwords match
       this.registerError = "";
@@ -324,7 +321,7 @@ export default {
             };
             setTimeout(() => {
               this.registerSuccess = false; // Reset register success after 3 seconds
-              window.location.href = "/dashboard/dashboard.html"; // Navigate to another page after 3 seconds
+              this.$router.push({ path: "/sidebar" });
             }, 2000);
           } else {
             alert("Registration failed: " + registerData.message); // Show error message
