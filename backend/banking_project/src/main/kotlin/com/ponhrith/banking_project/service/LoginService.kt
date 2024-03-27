@@ -8,6 +8,7 @@ import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -22,29 +23,33 @@ class LoginService(
     // Generate a secure key for HS512 algorithm
     private val jwtSecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512)
 
-    fun login(loginReq: LoginReq): LoginRes {
+    fun login(loginReq: LoginReq): ResponseEntity<LoginRes> {
         // Check if email and password are empty
         if (loginReq.email.isEmpty() || loginReq.password.isEmpty()) {
-            return LoginRes(success = false, message = "Email and password cannot be empty")
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(LoginRes(success = false, message = "Email and password cannot be empty"))
         }
         // Find the user by email
         val profile = profileRepository.findByEmail(loginReq.email)
-            ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email or password")
-        // Verify the password
-        if (!passwordEncoder.matches(loginReq.password, profile.password)) {
-            return LoginRes(success = false, message = "Invalid email or password")
+        if (profile == null || !passwordEncoder.matches(loginReq.password, profile.password)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(LoginRes(success = false, message = "Invalid email or password"))
         }
+
 
         val token = generateToken(profile.id.toString())
 
+
         // Return success response with profile object
-        return LoginRes(
+        return ResponseEntity.ok(LoginRes(
             success = true,
             message = "Login successful",
             profile = profile,
             token = token
-        )
+        ))
     }
+
+
+
+
 
     private fun generateToken(userId: String): String {
         return Jwts.builder()
