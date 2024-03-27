@@ -1,5 +1,4 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import Side_Bar from './components/Side_Bar.vue';
 
 const router = createRouter({
     history: createWebHistory(),

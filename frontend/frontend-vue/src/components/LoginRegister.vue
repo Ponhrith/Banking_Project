@@ -15,7 +15,7 @@
             <input type="text" placeholder="Email *" v-model="loginForm.email" />
           </div>
           <div class="custom-input-field">
-            <i class="fas fa-lock"></i>
+            <i class="fas fa-lock"></i>        
             <input :type="loginPasswordFieldType" placeholder="Password *" v-model="loginForm.password" />
             <span class="password-toggle-icon" @click="togglePassword('login')"><i class="fas"
                 :class="showLoginPassword ? 'fa-eye-slash' : 'fa-eye'"></i></span>
@@ -99,175 +99,223 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import axios from 'axios';
-
 export default {
   name: 'LoginRegister',
-  setup() {
-    const router = useRouter();
-    const signUpMode = ref(false);
-    const loginForm = ref({
-      email: '',
-      password: '',
-    });
-    const registerForm = ref({
-      fullname: '',
-      address: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    });
-    const showLoginPassword = ref(false);
-    const showRegisterPassword = ref(false);
-    const showRegisterConfirmPassword = ref(false);
-    const loginPasswordFieldType = ref('password');
-    const registerPasswordFieldType = ref('password');
-    const registerConfirmPasswordFieldType = ref('password');
-    const loginError = ref('');
-    const registerError = ref('');
-    const loginSuccess = ref(false);
-    const registerSuccess = ref(false);
-    const token = ref('');
-
-    const toggleMode = mode => {
-      signUpMode.value = mode === 'register';
+  data() {
+    return {
+      signUpMode: false,
+      loginForm: {
+        email: "",
+        password: "",
+      },
+      registerForm: {
+        fullname: "",
+        address: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      },
+      showLoginPassword: false,
+      showRegisterPassword: false,
+      showRegisterConfirmPassword: false,
+      loginPasswordFieldType: "password",
+      registerPasswordFieldType: "password",
+      registerConfirmPasswordFieldType: "password",
+      loginError: "",
+      registerError: "",
+      loginSuccess: false,
+      registerSuccess: false,
+      passwordMatchError: false,
+      token: "",
     };
-
-    const togglePassword = form => {
-      if (form === 'login') {
-        showLoginPassword.value = !showLoginPassword.value;
-        loginPasswordFieldType.value = showLoginPassword.value ? 'text' : 'password';
-      } else if (form === 'register') {
-        showRegisterPassword.value = !showRegisterPassword.value;
-        registerPasswordFieldType.value = showRegisterPassword.value ? 'text' : 'password';
-      } else if (form === 'confirm') {
-        showRegisterConfirmPassword.value = !showRegisterConfirmPassword.value;
-        registerConfirmPasswordFieldType.value = showRegisterConfirmPassword.value ? 'text' : 'password';
+  },
+  methods: {
+    toggleMode(mode) {
+      this.signUpMode = mode === "register";
+    },
+    togglePassword(form) {
+      if (form === "login") {
+        this.showLoginPassword = !this.showLoginPassword;
+        this.loginPasswordFieldType = this.showLoginPassword
+          ? "text"
+          : "password";
+      } else if (form === "register") {
+        this.showRegisterPassword = !this.showRegisterPassword;
+        this.registerPasswordFieldType = this.showRegisterPassword
+          ? "text"
+          : "password";
+      } else if (form === "confirm") {
+        this.showRegisterConfirmPassword = !this.showRegisterConfirmPassword;
+        this.registerConfirmPasswordFieldType = this.showRegisterConfirmPassword
+          ? "text"
+          : "password";
       }
-    };
+    },
+    isValidEmail(email) {
+      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return regex.test(email);
+    },
+    isValidPassword(password) {
+      const regex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      return regex.test(password);
+    },
+    isValidFullName(fullname) {
+      const regex = /^[a-zA-Z]+[\s][a-zA-Z]+$/;
+      return regex.test(fullname);
+    },
 
-    const isValidFullName = (fullname) => {
-      return /^[a-zA-Z\s]+$/.test(fullname);
-    };
 
-    const isValidEmail = (email) => {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    };
+    async submitLoginForm() {
+    // Reset login error message
+    this.loginError = "";
 
-    const isValidPassword = (password) => {
-      return password.length >= 8;
-    };
-
-    const submitLoginForm = async () => {
-      loginError.value = "";
-
-      if (!loginForm.value.email || !loginForm.value.password) {
-        loginError.value = "Fields cannot be empty!";
+    // Check if email and password fields are empty
+    if (!this.loginForm.email || !this.loginForm.password) {
+        this.loginError = "Fields cannot be empty!"; // Set login error message
         setTimeout(() => {
-          loginError.value = "";
+            this.loginError = "";
         }, 3000);
         return;
-      }
+    }
 
-      try {
-        const response = await axios.post(
-          "http://localhost:8080/api/v1/auth/login",
-          loginForm.value
+    try {
+        console.log("Sending login request with data:", this.loginForm);
+        const response = await fetch(
+            "http://localhost:8080/api/v1/auth/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(this.loginForm),
+            }
         );
 
-        if (response.status === 200) {
-          token.value = response.data.token;
-          loginSuccess.value = true;
-          loginForm.value = { email: '', password: '' };
-          setTimeout(() => {
-            loginSuccess.value = false;
-            router.push('/sidebar');
-          }, 2000);
-        } else {
-          loginError.value = "Invalid email or password!";
-          setTimeout(() => {
-            loginError.value = "";
-          }, 3000);
+        console.log("Received response:", response);
+        const responseData = await response.json();
+
+        console.log("Response data:", responseData);
+
+        // Check if response is not OK
+        if (!response.ok) {
+            // Handle non-OK responses
+            this.loginError = "Failed to login";
+            setTimeout(() => {
+                this.loginError = "";
+            }, 3000);
+            return;
         }
-      } catch (error) {
+
+        // Check statusCodeValue from the response body
+        if (responseData.statusCodeValue === 200) {
+            // Display the Bootstrap alert for login success
+            this.loginSuccess = true;
+            setTimeout(() => {
+                this.loginSuccess = false;
+                this.loginForm = { email: "", password: "" }; // Clear login form
+                this.$router.push({ path: "/sidebar" });
+            }, 2000);
+            return;
+        }
+
+        // Handle failed login
+        this.loginError = responseData.message || "Invalid email or password";
+        console.log("Login error:", this.loginError);
+        setTimeout(() => {
+            this.loginError = "";
+        }, 3000);
+    } catch (error) {
+        // Handle network errors
         console.error("Error:", error);
         alert("An error occurred while logging in.");
-      }
-    };
+    }
+},
 
-    const submitRegisterForm = async () => {
-      registerError.value = "";
 
+
+
+
+
+    async submitRegisterForm() {
+      // Check if passwords match
+      this.registerError = "";
+      // Check if any fields are empty
       if (
-        !registerForm.value.fullname ||
-        !registerForm.value.address ||
-        !registerForm.value.email ||
-        !registerForm.value.password ||
-        !registerForm.value.confirmPassword
+        !this.registerForm.fullname ||
+        !this.registerForm.address ||
+        !this.registerForm.email ||
+        !this.registerForm.password ||
+        !this.registerForm.confirmPassword
       ) {
-        registerError.value = "Fields cannot be empty!";
+        this.registerError = "Fields cannot be empty!"; // Set register error message
         setTimeout(() => {
-          registerError.value = "";
+          this.registerError = "";
         }, 3000);
         return;
       }
-
-      if (registerForm.value.password !== registerForm.value.confirmPassword) {
-        registerError.value = "Passwords do not match!";
+      if (this.registerForm.password !== this.registerForm.confirmPassword) {
+        this.registerError = "Passwords do not match!"; // Set register error message
         setTimeout(() => {
-          registerError.value = "";
+          this.registerError = "";
         }, 3000);
         return;
       }
-
-      if (!isValidFullName(registerForm.value.fullname)) {
-        registerError.value = "Invalid full name format!";
+      // Check if full name is valid
+      if (!this.isValidFullName(this.registerForm.fullname)) {
+        this.registerError = "Invalid full name format!"; // Set register error message
         setTimeout(() => {
-          registerError.value = "";
+          this.registerError = "";
         }, 3000);
         return;
       }
-
-      if (!isValidEmail(registerForm.value.email)) {
-        registerError.value = "Invalid email address";
+      // Check if email is valid
+      if (!this.isValidEmail(this.registerForm.email)) {
+        this.registerError = "Invalid email address"; // Set register error message
         setTimeout(() => {
-          registerError.value = "";
+          this.registerError = "";
         }, 3000);
         return;
       }
-
-      if (!isValidPassword(registerForm.value.password)) {
-        registerError.value = "Invalid password format!";
+      // Check if password is valid
+      if (!this.isValidPassword(this.registerForm.password)) {
+        this.registerError = "Invalid password format!"; // Set register error message
         setTimeout(() => {
-          registerError.value = "";
+          this.registerError = "";
         }, 3000);
         return;
       }
-
+      // If passwords match, proceed with registration
       try {
-        const emailCheckResponse = await axios.get(
+        const emailCheckResponse = await fetch(
           `http://localhost:8080/api/v1/profile/check-email?email=${encodeURIComponent(
-            registerForm.value.email
+            this.registerForm.email
           )}`
         );
-        if (emailCheckResponse.status === 200) {
-          const emailExists = emailCheckResponse.data;
+        if (emailCheckResponse.ok) {
+          const emailExists = await emailCheckResponse.json();
           if (emailExists) {
-            registerError.value = "Email already exists";
+            this.registerError = "Email already exists";
             setTimeout(() => {
-              registerError.value = "";
+              this.registerError = "";
             }, 3000);
             return;
           }
-          const registerResponse = await axios.post(
+          // Proceed with registration if email does not exist
+          const registerResponse = await fetch(
             "http://localhost:8080/api/v1/profile",
-            registerForm.value
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(this.registerForm),
+            }
           );
-          if (registerResponse.status === 200) {
-            registerSuccess.value = true;
-            registerForm.value = {
+          const registerData = await registerResponse.json();
+          if (registerResponse.ok) {
+            this.registerSuccess = true; // Set register success to true
+            this.registerForm = { // Clear the form
               fullname: '',
               address: '',
               email: '',
@@ -275,42 +323,24 @@ export default {
               confirmPassword: ''
             };
             setTimeout(() => {
-              registerSuccess.value = false;
-              window.location.href = "/dashboard/dashboard.html";
+              this.registerSuccess = false; // Reset register success after 3 seconds
+              window.location.href = "/dashboard/dashboard.html"; // Navigate to another page after 3 seconds
             }, 2000);
           } else {
-            alert("Registration failed: " + registerResponse.data.message);
+            alert("Registration failed: " + registerData.message); // Show error message
           }
         } else {
-          alert("Failed to check email existence");
+          alert("Failed to check email existence"); // Show error message
         }
       } catch (error) {
         console.error("Error:", error);
-        alert("An error occurred while registering.");
+        alert("An error occurred while registering."); // Show generic error message
       }
-    };
-    return {
-      signUpMode,
-      loginForm,
-      registerForm,
-      showLoginPassword,
-      showRegisterPassword,
-      showRegisterConfirmPassword,
-      loginPasswordFieldType,
-      registerPasswordFieldType,
-      registerConfirmPasswordFieldType,
-      loginError,
-      registerError,
-      loginSuccess,
-      registerSuccess,
-      toggleMode,
-      togglePassword,
-      submitLoginForm,
-      submitRegisterForm,
-    };
+    },
   },
 };
 </script>
+
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
